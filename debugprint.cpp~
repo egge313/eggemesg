@@ -1,0 +1,20 @@
+#include "debugprint.h"
+#include <QString>
+#include <fstream>
+#include <iostream>
+
+using namespace std;
+
+void debugprint (const char * str)
+{
+  ofstream outfile ( "eggemesg.debug", ios::append );
+  outfile << str << endl;
+  outfile.close();
+}
+
+void debugprint (const QString & str)
+{
+  ofstream outfile ( "eggemesg.debug", ios::append );
+  outfile << str.toStdString() << endl;
+  outfile.close();
+}
