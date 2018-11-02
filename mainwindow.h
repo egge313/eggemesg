@@ -9,6 +9,7 @@
 #include "connectdialog.h"
 #include "fortuneserver.h"
 #include "fortunethread.h"
+#include "version.h"
 
 class ConnectDialog;
 
@@ -41,6 +42,7 @@ class MainWindow : public QMainWindow
  private:
     void setStyleSheet(QString & sheetName);
     Ui::MainWindow *ui;
+    QString eggemesg_version = EGGEMESG_VERSION;
 };
 
 #endif // MAINWINDOW_H
