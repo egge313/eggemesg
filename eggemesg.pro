@@ -47,7 +47,8 @@ HEADERS += \
     cryptodialog.h \
     fortuneserver.h \
     fortunethread.h \
-    curlpost.h
+    curlpost.h \
+    version.h
 
 FORMS += \
     pwdialog.ui \

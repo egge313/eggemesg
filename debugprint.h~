@@ -1,6 +1,0 @@
-#ifndef DEBUGPRINT
-#define DEBUGPRINT 1
-
-void debugprint (char * str);
-
-#endif // debugprint

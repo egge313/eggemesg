@@ -8,6 +8,7 @@ PwDialog::PwDialog(QWidget *parent) :
     ui(new Ui::PwDialog)
 {
     ui->setupUi(this);
+    // ui->pushButtonDummy->hide();
     //    connect(ui->buttonBox, SIGNAL(clicked()),
     //        this, SLOT(onButtonClick));
     // connect(ui->buttonBox, &QDialogButtonBox::accepted, this, SLOT(accept()));    

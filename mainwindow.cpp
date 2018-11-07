@@ -36,6 +36,10 @@ MainWindow::MainWindow(QWidget *parent) :
     // set style sheet
     QString coffee_stylesheet ("coffee");
     setStyleSheet(coffee_stylesheet);
+
+    // set application icon
+    QIcon windowicon(":/images/icon.png");
+    setWindowIcon(windowicon);
 }
 
 
