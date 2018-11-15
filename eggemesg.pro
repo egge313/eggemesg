@@ -35,7 +35,8 @@ SOURCES += \
     cryptodialog.cpp \
     fortuneserver.cpp \
     fortunethread.cpp \
-    curlpost.cpp
+    curlpost.cpp \
+    torprocess.cpp
 
 HEADERS += \
     pwdialog.h \
@@ -48,7 +49,8 @@ HEADERS += \
     fortuneserver.h \
     fortunethread.h \
     curlpost.h \
-    version.h
+    version.h \
+    torprocess.h
 
 FORMS += \
     pwdialog.ui \

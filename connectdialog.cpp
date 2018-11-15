@@ -9,6 +9,8 @@
 #include <QSettings>
 #include "curlpost.h"
 #include <QTime>
+#include "torprocess.h"
+#include <QTimer>
 
 ConnectDialog::ConnectDialog(QWidget *parent,
 			     QMainWindow * mainwindow,
@@ -38,39 +40,41 @@ ConnectDialog::ConnectDialog(QWidget *parent,
                                                 // a compatible interface
 
     //    connect(quitButton, &QAbstractButton::clicked, this, &QWidget::close);
-//! [2] //! [3]
+    //! [2] //! [3]
     connect(m_tcpsocket, &QIODevice::readyRead, this,
 	    &ConnectDialog::readFortune);
-//! [2] //! [4]
+    //! [2] //! [4]
     connect(m_tcpsocket, 
-	  QOverload<QAbstractSocket::SocketError>::of(&QAbstractSocket::error),
-//! [3]
+	    QOverload<QAbstractSocket::SocketError>::of(&QAbstractSocket::error),
+	    //! [3]
             this, &ConnectDialog::displayError);
 
     QNetworkConfigurationManager manager;
     if (manager.capabilities() & QNetworkConfigurationManager::NetworkSessionRequired) {
-        // Get saved network configuration
-        QSettings settings(QSettings::UserScope, QLatin1String("QtProject"));
-        settings.beginGroup(QLatin1String("QtNetwork"));
-        const QString id = settings.
-	  value(QLatin1String("DefaultNetworkConfiguration")).toString();
-        settings.endGroup();
+      // Get saved network configuration
+      QSettings settings(QSettings::UserScope, QLatin1String("QtProject"));
+      settings.beginGroup(QLatin1String("QtNetwork"));
+      const QString id = settings.
+	value(QLatin1String("DefaultNetworkConfiguration")).toString();
+      settings.endGroup();
 
-        // If the saved network configuration is not currently discovered use the system default
-        QNetworkConfiguration config = manager.configurationFromIdentifier(id);
-        if ((config.state() & QNetworkConfiguration::Discovered) !=
-            QNetworkConfiguration::Discovered) {
-            config = manager.defaultConfiguration();
-        }
+      // If the saved network configuration is not currently
+      // discovered use the system default
+      QNetworkConfiguration config = manager.configurationFromIdentifier(id);
+      if ((config.state() & QNetworkConfiguration::Discovered) !=
+	  QNetworkConfiguration::Discovered) {
+	config = manager.defaultConfiguration();
+      }
 
-        m_networksession = new QNetworkSession(config, this);
-        connect(m_networksession, &QNetworkSession::opened, this,
-		&ConnectDialog::sessionOpened);
+      m_networksession = new QNetworkSession(config, this);
+      connect(m_networksession, &QNetworkSession::opened, this,
+	      &ConnectDialog::sessionOpened);
 
-        // getFortuneButton->setEnabled(false);
-        ui->labelClientInfo_2->setText(tr("Opening network session."));
-        m_networksession->open();
+      // getFortuneButton->setEnabled(false);
+      ui->labelClientInfo_2->setText(tr("Opening network session."));
+      m_networksession->open();
     }
+    tabTorControlUpdate();
 }
 
 void ConnectDialog::showhostname()
@@ -86,6 +90,46 @@ void ConnectDialog::showhostname()
     }
   QString hostinfo = QString("Host name: ") + name;
   ui->listWidgetHostInfo->addItem(hostinfo);
+}
+
+void ConnectDialog::tabTorControlUpdate()
+{
+    m_torprocess = new TorProcessThread ("qwe",
+				   QStringList() << "--version");
+    m_torprocess->launch();
+    QTimer::singleShot(3000, this, SLOT(tabTorControlUpdateHandler()));
+
+    if (m_torprocess->isfinished() || m_torprocess->erroroccurred())
+      {
+
+      }
+    ui->listWidgetTorControlHistory->addItem("Ha!");
+}
+
+void ConnectDialog::tabTorControlUpdateHandler()
+{
+  if (m_torprocess != nullptr)
+    {
+      QString stdoutmsg;
+      QString stderrmsg;
+
+      m_torprocess->readall(stdoutmsg, stderrmsg);
+      ui->listWidgetTorControlHistory->addItem(stdoutmsg);
+      ui->listWidgetTorControlHistory->addItem(stderrmsg);
+
+      if (m_torprocess->isfinished())
+	{
+	  ui->listWidgetTorControlHistory->addItem("Tor finished");
+	}
+      if (m_torprocess->erroroccurred())
+	{
+	  ui->listWidgetTorControlHistory->addItem(
+					       "Tor process error occurred");
+	  QString errmsg;
+	  m_torprocess->geterrormessage(errmsg);
+	  ui->listWidgetTorControlHistory->addItem(errmsg);
+	}
+    }
 }
 
 void ConnectDialog::showhostip()

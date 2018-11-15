@@ -98,5 +98,4 @@ private:
 
     QNetworkSession *networkSession = nullptr;
 };
-
 #endif // TORCONTROLLER_H

@@ -9,6 +9,7 @@
 #include <QDataStream>
 #include <QNetworkSession>
 #include <QNetworkConfigurationManager>
+#include "torprocess.h"
 
 namespace Ui {
 class ConnectDialog;
@@ -19,14 +20,14 @@ class ConnectDialog : public QDialog
     Q_OBJECT
 
  public:
-    QTcpSocket * m_tcpsocket = NULL;
+    QTcpSocket * m_tcpsocket = nullptr;
     QDataStream  m_instream;
-    QMainWindow * m_mainwindow = NULL;
+    QMainWindow * m_mainwindow = nullptr;
 
  public:
     explicit ConnectDialog(QWidget    * parent = 0,
-			   QMainWindow * mainwindow = NULL,
-                           FortuneServer * fortuneserver = NULL);
+			   QMainWindow * mainwindow = nullptr,
+                           FortuneServer * fortuneserver = nullptr);
     ~ConnectDialog();
 
  public slots:
@@ -37,15 +38,18 @@ class ConnectDialog : public QDialog
    void onPushButtonTorClientConnect();
    void displayError(QAbstractSocket::SocketError socketError);
    void sessionOpened();
+   void tabTorControlUpdateHandler();
 
  private:
    void showhostname();
    void showhostip();
    void readFortune();
    bool isonline (const QNetworkConfigurationManager & mgr);
-   FortuneServer * m_fortuneserver = NULL;
-   QNetworkSession * m_networksession = NULL;
+   void tabTorControlUpdate();
+   FortuneServer * m_fortuneserver = nullptr;
+   QNetworkSession * m_networksession = nullptr;
    QString currentFortune = "";
+   TorProcessThread * m_torprocess = nullptr;
 
  private:
     Ui::ConnectDialog *ui;

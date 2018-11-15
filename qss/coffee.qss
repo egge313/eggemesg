@@ -16,7 +16,7 @@ QPushButton {
     border-width: 2px;
     border-color: lightgrey;
     border-style: solid;
-    /* border-radius: 12px; */
+    border-radius: 9px; 
     padding: 2px;
     min-width: 10ex;
     min-height: 2ex;
@@ -87,7 +87,8 @@ QListView::item:hover {
 QFrame {
     background: 
     qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                stop: 0 cornsilk, stop:  0.5 #ebf1bd, stop: 1 #ccf4bb);
+                stop: 0 cornsilk, stop:  0.8 #ebf1bd, /* stop: 1 #ccf4bb); */
+		stop: 1 #ecf5b9);
     border-width: 2px;
     padding: 1px;
     border-style: solid;
@@ -127,7 +128,7 @@ QLabel {
 
 /* A QToolTip is a QLabel ... */
 QToolTip {
-    border: 1px solid lightgray;
+    border: none;
     padding-top: 3px;
     padding: 5px;
     /* border-radius: 5px; */
