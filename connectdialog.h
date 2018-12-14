@@ -46,6 +46,7 @@ class ConnectDialog : public QDialog
    void readFortune();
    bool isonline (const QNetworkConfigurationManager & mgr);
    void tabTorControlUpdate();
+   void tabTorControlGeneratePassword (QString & password);
    FortuneServer * m_fortuneserver = nullptr;
    QNetworkSession * m_networksession = nullptr;
    QString currentFortune = "";

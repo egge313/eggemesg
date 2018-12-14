@@ -11,6 +11,7 @@
 #include <QTime>
 #include "torprocess.h"
 #include <QTimer>
+#include <QDateTime>
 
 ConnectDialog::ConnectDialog(QWidget *parent,
 			     QMainWindow * mainwindow,
@@ -94,16 +95,50 @@ void ConnectDialog::showhostname()
 
 void ConnectDialog::tabTorControlUpdate()
 {
-    m_torprocess = new TorProcessThread ("qwe",
-				   QStringList() << "--version");
-    m_torprocess->launch();
-    QTimer::singleShot(3000, this, SLOT(tabTorControlUpdateHandler()));
+  QString controlportpasswd("");
+  tabTorControlGeneratePassword (controlportpasswd);
+  m_torprocess = new TorProcessThread ("tor",
+				       QStringList() 
+					 << "--hash-password"
+					 << controlportpasswd);
+  m_torprocess->launch();
+  ui->listWidgetTorControlHistory->addItem("Control port password is: " +
+					   controlportpasswd);
+  //  QTimer::singleShot(3000, this, SLOT(tabTorControlUpdateHandler()));
 
-    if (m_torprocess->isfinished() || m_torprocess->erroroccurred())
-      {
-
-      }
-    ui->listWidgetTorControlHistory->addItem("Ha!");
+  /*
+  while (!m_torprocess->isfinished() || !m_torprocess->erroroccurred())
+    {
+      ui->listWidgetTorControlHistory->addItem("Sleep 200 ms.");
+      QThread::msleep(200);
+    }
+  */
+  ui->listWidgetTorControlHistory->addItem("Process exited.");
+  QString stdoutmsg;
+  QString stderrmsg;
+  m_torprocess->readall(stdoutmsg, stderrmsg);      
+  QString controlportpasswordhash = stdoutmsg;
+  if (m_torprocess->isfinished())
+    {
+      for (int i; ; ++i)
+	{
+	  if (controlportpasswordhash.at(i) == '\n')
+	    {
+	      controlportpasswordhash[i] = '\0';
+	      break;
+	    }
+	  else if (controlportpasswordhash.at(i) == '\0')
+	    {
+	      break;
+	    }
+	}
+      ui->listWidgetTorControlHistory->addItem(controlportpasswordhash);
+    }
+  if (m_torprocess->erroroccurred())
+    {
+      ui->listWidgetTorControlHistory->addItem("Error occurred:");
+      ui->listWidgetTorControlHistory->addItem(stderrmsg);
+    }
 }
 
 void ConnectDialog::tabTorControlUpdateHandler()
@@ -130,6 +165,22 @@ void ConnectDialog::tabTorControlUpdateHandler()
 	  ui->listWidgetTorControlHistory->addItem(errmsg);
 	}
     }
+}
+
+void ConnectDialog::tabTorControlGeneratePassword (QString & password)
+{
+  QString table =
+    "qwertyuiopasdfghjklzxcvbnm1234567890QWERTYUIOPASDFGHJKLZXCVBNM";
+  int siz = table.length();
+  QString str;
+  str.resize(40);
+  QDateTime now = QDateTime::currentDateTime();
+  qsrand (now.toMSecsSinceEpoch());
+  for (int s = 0; s < 40 ; ++s)
+    {
+      str[s] = table[qrand() % siz];
+    }
+  password = str;
 }
 
 void ConnectDialog::showhostip()

@@ -107,10 +107,15 @@ public:
   {
     launch();
     emit torProcessDone();
-}
+  }
+
 signals:
     void torProcessSignal(const QString &s);
     void torProcessDone();    
+
+public slots:
+  void finishedHandler(int exitcode, QProcess::ExitStatus exitstatus);
+
 public:
   void launch ();
   void readall (QString & stdout_dat, QString & stderr_dat);
@@ -127,7 +132,8 @@ private:
     QString    * m_exitstatus = nullptr;
     QString      m_errormessage;
     bool         m_finished;
-    bool         m_erroroccurred; 
+    bool         m_erroroccurred;
+    QStringList  m_readbuffer;
 };
 
 
