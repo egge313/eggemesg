@@ -23,6 +23,7 @@ public:
     {
       // Handling signal 'finished'
       //
+      /*
       QObject::connect(&m_torprocess,
 	      QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
 	      [=](int exitCode, QProcess::ExitStatus exitStatus)
@@ -44,9 +45,10 @@ public:
 		emit torProcessDone();
 	      }
 	      );
-
+      */
       // Handling signal 'errorOccurred'
       //
+      /*
       m_errormessage = QString("");
       QObject::connect(&m_torprocess,
 	      QOverload<QProcess::ProcessError>::of(&QProcess::errorOccurred),
@@ -99,6 +101,7 @@ public:
 			 emit torProcessSignal(m_errormessage);
 		       }
 		       );
+      */
     }
 
   // run -- Start a thread, hence the overload from QThread::run()

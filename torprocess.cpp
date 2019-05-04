@@ -21,6 +21,7 @@ void 	stateChanged(QProcess::ProcessState newState)
 		   this,
 		   SLOT(finishedHandler(int, QProcess::ExitStatus)));
 
+  m_finished = false;
 
   m_torprocess.start();
 }
@@ -52,6 +53,7 @@ void TorProcessThread::finishedHandler(int exitcode,
     }
   readall(stdoutmsg, stderrmsg);
   m_readbuffer << stdoutmsg << stderrmsg;
+  m_finished = true;
 }
 
 

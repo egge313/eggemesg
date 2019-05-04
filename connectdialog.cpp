@@ -97,7 +97,7 @@ void ConnectDialog::tabTorControlUpdate()
 {
   QString controlportpasswd("");
   tabTorControlGeneratePassword (controlportpasswd);
-  m_torprocess = new TorProcessThread ("tor",
+  m_torprocess = new TorProcessThread ("/home/egge/koe/sleepy/build-sleepy-Desktop-Debug/sleepy",
 				       QStringList() 
 					 << "--hash-password"
 					 << controlportpasswd);
@@ -114,9 +114,22 @@ void ConnectDialog::tabTorControlUpdate()
     }
   */
   ui->listWidgetTorControlHistory->addItem("Process exited.");
+
+  if (m_torprocess->isfinished())
+    {
+        ui->listWidgetTorControlHistory->addItem(
+					  "Process checks out as finished.");
+    }
+  else
+    {
+        ui->listWidgetTorControlHistory->addItem(
+					"Process checks out as not finished.");      
+    }
+
   QString stdoutmsg;
   QString stderrmsg;
   m_torprocess->readall(stdoutmsg, stderrmsg);      
+
   QString controlportpasswordhash = stdoutmsg;
   if (m_torprocess->isfinished())
     {

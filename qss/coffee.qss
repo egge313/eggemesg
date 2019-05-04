@@ -174,7 +174,7 @@ QTabWidget {
     border-top-right-radius: 5px;
     min-width: 180mm;
     font-size: 9pt;
-    padding: 5px;
+    padding: 6px;
     padding-bottom: 0px;
 }
 
@@ -196,15 +196,15 @@ QTabWidget {
 
  QTabBar::tab:selected
 {
-   color: green;
-   font-weight: bold;
+    color: green;
+    font-weight: bold;
     font-size: 9pt;
-   background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
                                 stop: 0 #fafafa, stop: 0.33 #f4f4f4,
-                                stop: 0.67 #e7e7e7, stop: 1.0  #ebf1bd);
+                                stop: 0.67 #e7e7e7, stop: 1.0 #b6dbb8);
     border-color: #9B9B9B;
     border-bottom-color: #b6dbb8; /* same as pane color */
-    padding: 5px;
+    padding: 6px;
     padding-right: 5px;
     padding-left: 5px;
 }
@@ -226,7 +226,7 @@ QTabWidget {
     border: 1px solid #C4C4C3;
     border-bottom-color: #b6dbb8; /* same as the pane color */
     border-radius: 5px;
-    padding: 5px;
+    padding: 6px;
 }
 
 
