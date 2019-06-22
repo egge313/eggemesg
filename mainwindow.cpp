@@ -48,7 +48,7 @@ void MainWindow::OnClickedLoginRegister()
   ui->statusbar->showMessage(
 			     "Clicked login/register",
 			    3000);
-  if (NULL == m_pwdlg)
+  if (nullptr == m_pwdlg)
     {
       m_pwdlg = new PwDialog(this);
       // connect (m_pwdlg, SIGNAL(setUserSuccesfully()), this,
@@ -63,7 +63,7 @@ void MainWindow::OnClickedLoginRegister()
     debugprint(str);
 
   }
-  UserData* ud = NULL;
+  UserData* ud = nullptr;
   QString info = "";
   switch (retval)
     {
@@ -96,7 +96,7 @@ void MainWindow::OnClickedLoginRegister()
 
 void MainWindow::OnClickedSetKeys()
 {
-  if (NULL == m_cryptodlg)
+  if (nullptr == m_cryptodlg)
     {
       m_cryptodlg = new CryptoDialog(this, m_pwdlg->getUserData());
     }
@@ -138,7 +138,7 @@ void MainWindow::OnShowMessage(const QString & msg)
 
 void MainWindow::OnClickedConnect()
 {
-  if (NULL == m_connectdlg)
+  if (nullptr == m_connectdlg)
     {
       m_connectdlg = new ConnectDialog(this, this);
     }

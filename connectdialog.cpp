@@ -46,12 +46,14 @@ ConnectDialog::ConnectDialog(QWidget *parent,
 	    &ConnectDialog::readFortune);
     //! [2] //! [4]
     connect(m_tcpsocket, 
-	    QOverload<QAbstractSocket::SocketError>::of(&QAbstractSocket::error),
+	    QOverload<QAbstractSocket::SocketError>::of(
+						&QAbstractSocket::error),
 	    //! [3]
             this, &ConnectDialog::displayError);
 
     QNetworkConfigurationManager manager;
-    if (manager.capabilities() & QNetworkConfigurationManager::NetworkSessionRequired) {
+    if (manager.capabilities() &
+	QNetworkConfigurationManager::NetworkSessionRequired) {
       // Get saved network configuration
       QSettings settings(QSettings::UserScope, QLatin1String("QtProject"));
       settings.beginGroup(QLatin1String("QtNetwork"));
@@ -101,7 +103,7 @@ void ConnectDialog::tabTorControlUpdate()
 				       QStringList() 
 					 << "--hash-password"
 					 << controlportpasswd);
-  m_torprocess->launch();
+  m_torprocess->start();
   ui->listWidgetTorControlHistory->addItem("Control port password is: " +
 					   controlportpasswd);
   //  QTimer::singleShot(3000, this, SLOT(tabTorControlUpdateHandler()));

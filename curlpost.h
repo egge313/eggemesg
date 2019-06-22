@@ -11,11 +11,12 @@ class CurlpostException
  private:
   QString data;
  public:
-  CurlpostException (const QString & d = "") : data(d) {}
+  explicit CurlpostException (const QString & d = "") : data(d) {}
   virtual const QString & what() const 
   {
     return data;
   }
+  virtual ~CurlpostException () {}
 };
 
 // ---
