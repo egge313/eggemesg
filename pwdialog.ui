@@ -20,7 +20,7 @@
   <property name="sizeGripEnabled">
    <bool>false</bool>
   </property>
-  <layout class="QGridLayout" name="gridLayout_3">
+  <layout class="QGridLayout" name="gridLayout_2">
    <item row="0" column="0">
     <widget class="QTabWidget" name="tabWidget">
      <property name="cursor">
@@ -39,7 +39,7 @@
       <number>0</number>
      </property>
      <property name="elideMode">
-      <enum>Qt::ElideNone</enum>
+      <enum>Qt::ElideRight</enum>
      </property>
      <widget class="QWidget" name="tabLogin">
       <property name="cursor">
@@ -51,7 +51,17 @@
       <attribute name="title">
        <string>Login</string>
       </attribute>
-      <layout class="QGridLayout" name="gridLayout_2">
+      <layout class="QGridLayout" name="gridLayout_3">
+       <item row="0" column="1">
+        <widget class="QCheckBox" name="checkBoxGloballyVisible">
+         <property name="toolTip">
+          <string>User visible to all other users</string>
+         </property>
+         <property name="text">
+          <string>Globally visible</string>
+         </property>
+        </widget>
+       </item>
        <item row="1" column="0">
         <widget class="QLabel" name="label">
          <property name="cursor">
@@ -62,7 +72,7 @@
          </property>
         </widget>
        </item>
-       <item row="1" column="2">
+       <item row="1" column="1">
         <widget class="QLineEdit" name="lineEditUser1"/>
        </item>
        <item row="2" column="0">
@@ -72,20 +82,10 @@
          </property>
         </widget>
        </item>
-       <item row="2" column="2">
+       <item row="2" column="1">
         <widget class="QLineEdit" name="lineEditPw1">
          <property name="echoMode">
           <enum>QLineEdit::Password</enum>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="2">
-        <widget class="QCheckBox" name="checkBoxGloballyVisible">
-         <property name="toolTip">
-          <string>User visible to all other users</string>
-         </property>
-         <property name="text">
-          <string>Globally visible</string>
          </property>
         </widget>
        </item>
@@ -144,6 +144,91 @@
         </widget>
        </item>
       </layout>
+     </widget>
+     <widget class="QWidget" name="tabScorchedEarth">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="toolTip">
+       <string>Scorched earth means you are leaving nothing behind. You burn everything. This is the ultimate precaution, the ultimate get-away.</string>
+      </property>
+      <property name="statusTip">
+       <string/>
+      </property>
+      <attribute name="title">
+       <string>Precaution</string>
+      </attribute>
+      <widget class="QLabel" name="label_6">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>10</y>
+         <width>431</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Loggin in with this password leaves schorched earth behind.</string>
+       </property>
+       <property name="textFormat">
+        <enum>Qt::PlainText</enum>
+       </property>
+       <property name="scaledContents">
+        <bool>true</bool>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_7">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>40</y>
+         <width>101</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Password:</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_8">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>70</y>
+         <width>111</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Repeat password:</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="lineEditPw3">
+       <property name="geometry">
+        <rect>
+         <x>130</x>
+         <y>40</y>
+         <width>251</width>
+         <height>25</height>
+        </rect>
+       </property>
+       <property name="echoMode">
+        <enum>QLineEdit::Password</enum>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="lineEditPw3Repeat">
+       <property name="geometry">
+        <rect>
+         <x>130</x>
+         <y>70</y>
+         <width>251</width>
+         <height>25</height>
+        </rect>
+       </property>
+       <property name="echoMode">
+        <enum>QLineEdit::Password</enum>
+       </property>
+      </widget>
      </widget>
     </widget>
    </item>
