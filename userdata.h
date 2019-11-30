@@ -7,8 +7,9 @@ class UserData
 {
 public:
   QString m_user;
-  QString m_password;
-  QString m_scorchedearthpassword;
+  QString m_password; // Passwords should be stored as hashes, even in main
+                      // memory.
+  QString m_scorchedearthpassword; // Ditto.
   bool    m_new;
 
   UserData (QString user, QString password, 

@@ -367,7 +367,10 @@ void EggeCrypt::gcrypt_init()
 
     if (err) {
         xerr("gcrypt: failed initialization");
+	return;
     }
+    
+    return;
 }
 
 size_t EggeCrypt::get_keypair_size(int nbits)
