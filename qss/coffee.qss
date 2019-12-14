@@ -163,6 +163,7 @@ QTabWidget {
 /* Style the tab using the tab sub-control. Note that
     it reads QTabBar _not_ QTabWidget */
  QTabBar::tab {
+    color: gray;
     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
                                 stop: 0 #E1E1E1,
 				stop: 0.3 #b6dbb8,
@@ -173,9 +174,10 @@ QTabWidget {
     border-bottom-color: #b6dbb8; /* same as the pane color */
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
-    min-width: 180mm;
-    font-size: 9pt;
-    padding: 6px;
+    min-width: 240mm;
+    font-weight: bold;
+    font-size: 8pt;
+    padding: 5px;
     padding-bottom: 0px;
 }
 
@@ -188,9 +190,10 @@ QTabWidget {
     border-bottom-color: #b6dbb8; /* same as the pane color */
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
-    min-width: 180mm;
-    font-size: 9pt;
-    padding: 6px;
+    min-width: 240mm;
+    font-weight: bold;
+    font-size: 8pt;
+    padding: 5px;
     padding-bottom: 0px;
 }
 
@@ -199,10 +202,14 @@ QTabWidget {
     color: yellow;
     padding: 5px;
     font-weight: bold;
-    font-size: 9pt;
     background: qradialgradient(cx: 0.3, cy: -0.4,
     fx: 0.3, fy: -0.4,
     radius: 1.45, stop: 0 #fda, stop: 1 green); 
+
+    min-width: 240mm;
+    font-size: 8pt;
+    padding: 5px;
+
 /*
     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
                                 stop: 0 #fafafa, stop: 0.4 #f4f4f4,
@@ -215,14 +222,17 @@ QTabWidget {
 {
     color: green;
     font-weight: bold;
-    font-size: 9pt;
+
     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
                                 stop: 0 #fafafa, stop: 0.33 #f4f4f4,
                                 stop: 0.67 #e7e7e7, stop: 0.8 #e1e1e1
 				stop: 1.0 #e1e1e1);
     border-color: #9B9B9B;
     border-bottom-color: #b6dbb8; /* same as pane color */
-    padding: 6px;
+
+    min-width: 240mm;
+    font-size: 8pt;
+    padding: 5px;
     padding-right: 5px;
     padding-left: 5px;
 }
