@@ -163,22 +163,21 @@ QTabWidget {
 /* Style the tab using the tab sub-control. Note that
     it reads QTabBar _not_ QTabWidget */
  QTabBar::tab {
-    color: gray;
+    /* color: darkgray; */
     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                stop: 0 #E1E1E1,
-				stop: 0.3 #b6dbb8,
-				stop: 0.6 #ccf4bb,
+                                stop: 0   #b6dbb8,
+				stop: 0.3 #cef4bb,
+				stop: 0.6 #ddf4bb,
                                 stop: 1.0 #e1e1e1);
     border: 2px solid #C4C4C3;
     border-bottom-width: 0px;
     border-bottom-color: #b6dbb8; /* same as the pane color */
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
-    min-width: 240mm;
-    font-weight: bold;
-    font-size: 8pt;
+    min-width: 14ex;
+    font-weight: normal;
+    font-size: 9pt;
     padding: 5px;
-    padding-bottom: 0px;
 }
 
  QTabBar::tab:disabled {
@@ -190,11 +189,10 @@ QTabWidget {
     border-bottom-color: #b6dbb8; /* same as the pane color */
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
-    min-width: 240mm;
+    min-width: 12ex;
     font-weight: bold;
-    font-size: 8pt;
+    font-size: 9pt;
     padding: 5px;
-    padding-bottom: 0px;
 }
 
 
@@ -206,8 +204,8 @@ QTabWidget {
     fx: 0.3, fy: -0.4,
     radius: 1.45, stop: 0 #fda, stop: 1 green); 
 
-    min-width: 240mm;
-    font-size: 8pt;
+    min-width: 12ex;
+    font-size: 9pt;
     padding: 5px;
 
 /*
@@ -222,26 +220,24 @@ QTabWidget {
 {
     color: green;
     font-weight: bold;
-
     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
                                 stop: 0 #fafafa, stop: 0.33 #f4f4f4,
                                 stop: 0.67 #e7e7e7, stop: 0.8 #e1e1e1
 				stop: 1.0 #e1e1e1);
     border-color: #9B9B9B;
     border-bottom-color: #b6dbb8; /* same as pane color */
-
-    min-width: 240mm;
-    font-size: 8pt;
+    min-width: 12ex;
+    font-size: 9pt;
     padding: 5px;
-    padding-right: 5px;
-    padding-left: 5px;
+    padding-right: 3px; 
+    padding-left: 3px;
 }
 
 
  QTabBar::tab:!selected {
     /* padding-right: -7px; */
     /* font-color: grey; */
-    /* margin-top: 2px;*/ /* make non-selected tabs look smaller */
+    margin-top: 1.3px; /* make non-selected tabs look smaller */
 }
 
  QTabWidget::pane { /* The tab widget frame */
