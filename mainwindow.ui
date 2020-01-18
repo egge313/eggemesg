@@ -71,7 +71,7 @@
          <x>10</x>
          <y>46</y>
          <width>681</width>
-         <height>41</height>
+         <height>111</height>
         </rect>
        </property>
        <property name="frameShape">
@@ -98,18 +98,18 @@
        <property name="geometry">
         <rect>
          <x>10</x>
-         <y>107</y>
-         <width>401</width>
-         <height>211</height>
+         <y>177</y>
+         <width>681</width>
+         <height>141</height>
         </rect>
        </property>
        <widget class="QTextEdit" name="textEditMyMessages">
         <property name="geometry">
          <rect>
           <x>10</x>
-          <y>10</y>
-          <width>381</width>
-          <height>191</height>
+          <y>80</y>
+          <width>661</width>
+          <height>121</height>
          </rect>
         </property>
        </widget>

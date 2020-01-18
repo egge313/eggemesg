@@ -3,5 +3,6 @@
         <file>images/icon.png</file>
         <file>qss/coffee.qss</file>
         <file>images/egge-downarrow.png</file>
+        <file>images/bgabstract.png</file>
     </qresource>
 </RCC>

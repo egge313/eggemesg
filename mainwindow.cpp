@@ -13,6 +13,8 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    m_statusbarlabel = new QLabel("Starting");
+    ui->statusbar->addPermanentWidget(m_statusbarlabel);
     ui->statusbar->showMessage(
 			   "Welcome, your holiness! ", 
 			    5000);

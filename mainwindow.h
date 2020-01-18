@@ -10,6 +10,7 @@
 #include "fortuneserver.h"
 #include "fortunethread.h"
 #include "version.h"
+#include <QLabel>
 
 class ConnectDialog;
 
@@ -43,6 +44,7 @@ class MainWindow : public QMainWindow
     void setStyleSheet(QString & sheetName);
     Ui::MainWindow *ui;
     QString eggemesg_version = EGGEMESG_VERSION;
+    QLabel* m_statusbarlabel = NULL;
 };
 
 #endif // MAINWINDOW_H

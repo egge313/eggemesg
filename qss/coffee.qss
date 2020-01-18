@@ -1,5 +1,9 @@
 .QWidget {
-   background-color: beige;
+	 background:     qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                stop: 0 #fce5a8,
+		stop:  1 #d7cca4
+		);
+   /* background-color: #; */
 }
 
 /* Nice Windows-XP-style password character. */
@@ -85,14 +89,14 @@ QListView::item:hover {
    glow. */
 
 QFrame {
-    background: 
+    background:
     qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                stop: 0 cornsilk, stop:  0.8 #ebf1bd, /* stop: 1 #ccf4bb); */
+                stop: 0 cornsilk, stop:  0.8 #ebf1bd,
 		stop: 1 #ecf5b9);
-    border-width: 2px;
+    border-width: 1px;
     padding: 1px;
     border-style: solid;
-    border-color: lightgrey;
+    border-color: #cbd794;
     border-radius: 5px;
 }
 
@@ -167,8 +171,8 @@ QTabWidget {
     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
                                 stop: 0   #b6dbb8,
 				stop: 0.3 #cef4bb,
-				stop: 0.6 #ddf4bb,
-                                stop: 1.0 #e1e1e1);
+                                /* stop: 0.6 #ddf4bb, */
+                                stop: 1.0 #ddf4bb);
     border: 2px solid #C4C4C3;
     border-bottom-width: 0px;
     border-bottom-color: #b6dbb8; /* same as the pane color */
