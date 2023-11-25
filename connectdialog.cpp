@@ -4,8 +4,8 @@
 #include <QNetworkInterface>
 #include "fortuneserver.h"
 #include <QMessageBox>
-#include <QNetworkConfigurationManager>
-#include <QNetworkSession>
+//#include <QNetworkConfigurationManager>
+// #include <QNetworkSession>
 #include <QSettings>
 #include "curlpost.h"
 #include <QTime>
@@ -45,12 +45,8 @@ ConnectDialog::ConnectDialog(QWidget *parent,
     connect(m_tcpsocket, &QIODevice::readyRead, this,
 	    &ConnectDialog::readFortune);
     //! [2] //! [4]
-    connect(m_tcpsocket, 
-	    QOverload<QAbstractSocket::SocketError>::of(
-						&QAbstractSocket::error),
-	    //! [3]
-            this, &ConnectDialog::displayError);
 
+/*
     QNetworkConfigurationManager manager;
     if (manager.capabilities() &
 	QNetworkConfigurationManager::NetworkSessionRequired) {
@@ -77,7 +73,7 @@ ConnectDialog::ConnectDialog(QWidget *parent,
       ui->labelClientInfo_2->setText(tr("Opening network session."));
       m_networksession->open();
     }
-    tabTorControlUpdate();
+  */  tabTorControlUpdate();
 }
 
 void ConnectDialog::showhostname()
@@ -190,10 +186,10 @@ void ConnectDialog::tabTorControlGeneratePassword (QString & password)
   QString str;
   str.resize(40);
   QDateTime now = QDateTime::currentDateTime();
-  qsrand (now.toMSecsSinceEpoch());
+  srand (now.toMSecsSinceEpoch());
   for (int s = 0; s < 40 ; ++s)
     {
-      str[s] = table[qrand() % siz];
+      str[s] = table[rand() % siz];
     }
   password = str;
 }
@@ -264,13 +260,15 @@ void ConnectDialog::onPushButtonLaunchServer ()
       
 }
 
-bool ConnectDialog::isonline (const QNetworkConfigurationManager & mgr)
+bool ConnectDialog::isonline (void * mgr)
 {
-  QList<QNetworkConfiguration> activeConfigs =
+  /* QList<QNetworkConfiguration> activeConfigs =
     mgr.allConfigurations(QNetworkConfiguration::Active);
   if (activeConfigs.count() > 0)
     return mgr.isOnline();
   else
+    return false;
+*/
     return false;
 }
 
@@ -409,8 +407,8 @@ void Client::enableGetFortuneButton()
 void ConnectDialog::sessionOpened()
 {
     // Save the used configuration
-    QNetworkConfiguration config = m_networksession->configuration();
-    QString id;
+  //  QNetworkConfiguration config = m_networksession->configuration();
+   /* QString id;
     if (config.type() == QNetworkConfiguration::UserChoice)
         id = m_networksession->sessionProperty(
 			  QLatin1String("UserChoiceConfiguration")).toString();
@@ -421,7 +419,7 @@ void ConnectDialog::sessionOpened()
     settings.beginGroup(QLatin1String("QtNetwork"));
     settings.setValue(QLatin1String("DefaultNetworkConfiguration"), id);
     settings.endGroup();
-
+*/
     /*
     statusLabel->setText(tr("This examples requires that you run the "
                             "Fortune Server example as well."));

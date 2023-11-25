@@ -51,6 +51,9 @@ public slots:
     void doWork(const QString &parameter)
     {
       Curlpost curlpost;
+
+      // This is to make compiler happy.
+      QString p = parameter;
       for (;;)
 	{
 	  try
@@ -61,10 +64,10 @@ public slots:
 		}
 	      else
 		{
-		  emit resultReady("Tor is OFF"); 
+          emit resultReady("Tor is OFF");
 		}
 	    }
-	  catch (CurlpostException excp)
+      catch (CurlpostException & excp)
 	    {
 		  emit resultReady("Tor is OFF"); 
 	    }

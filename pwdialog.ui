@@ -6,15 +6,14 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>481</width>
-    <height>187</height>
+    <width>482</width>
+    <height>208</height>
    </rect>
   </property>
   <property name="font">
    <font>
     <family>Noto Sans Mono CJK TC</family>
     <pointsize>11</pointsize>
-    <weight>75</weight>
     <bold>true</bold>
    </font>
   </property>
@@ -35,7 +34,6 @@
       <font>
        <family>Noto Sans</family>
        <pointsize>9</pointsize>
-       <weight>9</weight>
        <italic>false</italic>
        <bold>false</bold>
       </font>
@@ -63,7 +61,6 @@
        <font>
         <family>Noto Sans</family>
         <pointsize>9</pointsize>
-        <weight>9</weight>
         <italic>false</italic>
         <bold>false</bold>
        </font>
@@ -182,7 +179,6 @@
        <font>
         <family>Noto Sans</family>
         <pointsize>9</pointsize>
-        <weight>9</weight>
         <italic>false</italic>
         <bold>false</bold>
        </font>
