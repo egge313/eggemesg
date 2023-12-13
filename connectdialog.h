@@ -7,8 +7,8 @@
 #include "mainwindow.h"
 #include <QTcpSocket>
 #include <QDataStream>
-#include <QNetworkSession>
-#include <QNetworkConfigurationManager>
+// #include <QNetworkSession>
+// #include <QNetworkConfigurationManager>
 #include "torprocess.h"
 
 namespace Ui {
@@ -44,11 +44,11 @@ class ConnectDialog : public QDialog
    void showhostname();
    void showhostip();
    void readFortune();
-   bool isonline (const QNetworkConfigurationManager & mgr);
+   // bool isonline (const QNetworkConfigurationManager & mgr);
    void tabTorControlUpdate();
    void tabTorControlGeneratePassword (QString & password);
    FortuneServer * m_fortuneserver = nullptr;
-   QNetworkSession * m_networksession = nullptr;
+   // QNetworkSession * m_networksession = nullptr;
    QString currentFortune = "";
    TorProcessThread * m_torprocess = nullptr;
 

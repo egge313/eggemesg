@@ -4,8 +4,8 @@
 #include <QNetworkInterface>
 #include "fortuneserver.h"
 #include <QMessageBox>
-#include <QNetworkConfigurationManager>
-#include <QNetworkSession>
+// #include <QNetworkConfigurationManager>
+// #include <QNetworkSession>
 #include <QSettings>
 #include "curlpost.h"
 #include <QTime>
@@ -45,6 +45,9 @@ ConnectDialog::ConnectDialog(QWidget *parent,
     connect(m_tcpsocket, &QIODevice::readyRead, this,
 	    &ConnectDialog::readFortune);
     //! [2] //! [4]
+    //!
+    //!
+/* -----------
     connect(m_tcpsocket, 
 	    QOverload<QAbstractSocket::SocketError>::of(
 						&QAbstractSocket::error),
@@ -76,8 +79,10 @@ ConnectDialog::ConnectDialog(QWidget *parent,
       // getFortuneButton->setEnabled(false);
       ui->labelClientInfo_2->setText(tr("Opening network session."));
       m_networksession->open();
-    }
-    tabTorControlUpdate();
+}
+-- */
+
+ //   tabTorControlUpdate();
 }
 
 void ConnectDialog::showhostname()
@@ -190,10 +195,10 @@ void ConnectDialog::tabTorControlGeneratePassword (QString & password)
   QString str;
   str.resize(40);
   QDateTime now = QDateTime::currentDateTime();
-  qsrand (now.toMSecsSinceEpoch());
+  srand (now.toMSecsSinceEpoch());
   for (int s = 0; s < 40 ; ++s)
     {
-      str[s] = table[qrand() % siz];
+      str[s] = table[rand() % siz];
     }
   password = str;
 }
@@ -264,6 +269,7 @@ void ConnectDialog::onPushButtonLaunchServer ()
       
 }
 
+/*
 bool ConnectDialog::isonline (const QNetworkConfigurationManager & mgr)
 {
   QList<QNetworkConfiguration> activeConfigs =
@@ -273,6 +279,7 @@ bool ConnectDialog::isonline (const QNetworkConfigurationManager & mgr)
   else
     return false;
 }
+*/
 
 void ConnectDialog::accept ()
 {
@@ -409,6 +416,7 @@ void Client::enableGetFortuneButton()
 void ConnectDialog::sessionOpened()
 {
     // Save the used configuration
+    /*
     QNetworkConfiguration config = m_networksession->configuration();
     QString id;
     if (config.type() == QNetworkConfiguration::UserChoice)
@@ -416,11 +424,14 @@ void ConnectDialog::sessionOpened()
 			  QLatin1String("UserChoiceConfiguration")).toString();
     else
         id = config.identifier();
+*/
 
+/*
     QSettings settings(QSettings::UserScope, QLatin1String("QtProject"));
     settings.beginGroup(QLatin1String("QtNetwork"));
     settings.setValue(QLatin1String("DefaultNetworkConfiguration"), id);
     settings.endGroup();
+*/
 
     /*
     statusLabel->setText(tr("This examples requires that you run the "
