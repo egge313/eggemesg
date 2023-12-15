@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>722</width>
-    <height>566</height>
+    <height>669</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -100,16 +100,16 @@
          <x>10</x>
          <y>177</y>
          <width>681</width>
-         <height>141</height>
+         <height>111</height>
         </rect>
        </property>
        <widget class="QTextEdit" name="textEditMyMessages">
         <property name="geometry">
          <rect>
           <x>10</x>
-          <y>80</y>
+          <y>130</y>
           <width>661</width>
-          <height>121</height>
+          <height>171</height>
          </rect>
         </property>
        </widget>
@@ -117,8 +117,8 @@
       <widget class="QPushButton" name="Send">
        <property name="geometry">
         <rect>
-         <x>540</x>
-         <y>360</y>
+         <x>560</x>
+         <y>580</y>
          <width>125</width>
          <height>30</height>
         </rect>
@@ -130,8 +130,8 @@
       <widget class="QTextEdit" name="textEditMessages">
        <property name="geometry">
         <rect>
-         <x>25</x>
-         <y>340</y>
+         <x>30</x>
+         <y>520</y>
          <width>371</width>
          <height>82</height>
         </rect>
@@ -167,7 +167,6 @@
        <property name="font">
         <font>
          <pointsize>10</pointsize>
-         <weight>75</weight>
          <bold>true</bold>
         </font>
        </property>
@@ -217,7 +216,6 @@
        <property name="font">
         <font>
          <pointsize>10</pointsize>
-         <weight>75</weight>
          <italic>false</italic>
          <bold>true</bold>
         </font>
@@ -262,7 +260,6 @@
        <property name="font">
         <font>
          <pointsize>10</pointsize>
-         <weight>75</weight>
          <italic>false</italic>
          <bold>true</bold>
         </font>

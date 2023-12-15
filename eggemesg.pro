@@ -11,7 +11,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = eggemesg
 TEMPLATE = app
 
-CONFIG += c++14
+CONFIG += c++20
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which has been marked as deprecated (the exact warnings
@@ -36,7 +36,8 @@ SOURCES += \
     fortuneserver.cpp \
     fortunethread.cpp \
     curlpost.cpp \
-    torprocess.cpp
+    torprocess.cpp \
+    eggehttpserver.cpp
 
 HEADERS += \
     pwdialog.h \
@@ -50,7 +51,8 @@ HEADERS += \
     fortunethread.h \
     curlpost.h \
     version.h \
-    torprocess.h
+    torprocess.h \
+    eggehttpserver.h
 
 FORMS += \
     pwdialog.ui \
@@ -61,7 +63,7 @@ FORMS += \
 unix:!macx: LIBS += -L$$PWD/../../../../usr/local/lib/ -lgcrypt \
                     -lgpg-error
 unix:!macx: LIBS += -L$$PWD/../../../../usr/local/lib/ -lcurl
-
+unix:!macx: LIBS += -L$$PWD/../../../../usr/local/lib/ -lhttpserver
 
 INCLUDEPATH += $$PWD/../../../../usr/local/include
 DEPENDPATH += $$PWD/../../../../usr/local/include

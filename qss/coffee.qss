@@ -74,6 +74,7 @@ QStatusBar::item {
     border-color: darkkhaki;
     border-style: solid;
     border-radius: 2;
+    color: lightyellow;
 }
 
 QListView {
@@ -91,8 +92,9 @@ QListView::item:hover {
 QFrame {
     background:
     qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                stop: 0 cornsilk, stop:  0.8 #ebf1bd,
-		stop: 1 #ecf5b9);
+                stop: 0 #efffff,
+                stop:  0.7 cornsilk,
+                stop: 1 lightblue);
     border-width: 1px;
     padding: 1px;
     border-style: solid;
