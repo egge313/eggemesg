@@ -52,24 +52,24 @@ public slots:
     {
       Curlpost curlpost;
       for (;;)
-	{
-	  try
-	    {
-	      if (curlpost.is_Tor_on())
-		{
-		  emit resultReady("Tor is ON"); 
-		}
-	      else
-		{
-		  emit resultReady("Tor is OFF"); 
-		}
-	    }
-	  catch (CurlpostException excp)
-	    {
-		  emit resultReady("Tor is OFF"); 
-	    }
-	  QThread::sleep(3*60); // 3 minutes
-	}
+        {
+          try
+            {
+              if (curlpost.is_Tor_on())
+                {
+                    emit resultReady("Tor is ON");
+                }
+              else
+                {
+                    emit resultReady("Tor is OFF");
+                }
+             }
+          catch (CurlpostException excp)
+            {
+              emit resultReady("Tor is OFF");
+            }
+          QThread::sleep(3*60); // 3 minutes
+        }
     }
 
 signals:

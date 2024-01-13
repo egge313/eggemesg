@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui network
+QT       += core gui network httpserver
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -22,7 +22,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # You can also make your code fail to compile if you use deprecated APIs.
 # In order to do so, uncomment the following line.
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
-DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x05100    # disables all the APIs deprecated before Qt 6.0.0
+DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x06500    # disables all the APIs deprecated before Qt 6.5.0
 
 
 SOURCES += \
@@ -44,6 +44,7 @@ HEADERS += \
     eggecrypt.h \
     connectdialog.h \
     mainwindow.h \
+    serverctrl.h \
     userdata.h \
     debugprint.h \
     cryptodialog.h \
@@ -63,7 +64,6 @@ FORMS += \
 unix:!macx: LIBS += -L$$PWD/../../../../usr/local/lib/ -lgcrypt \
                     -lgpg-error
 unix:!macx: LIBS += -L$$PWD/../../../../usr/local/lib/ -lcurl
-unix:!macx: LIBS += -L$$PWD/../../../../usr/local/lib/ -lhttpserver
 
 INCLUDEPATH += $$PWD/../../../../usr/local/include
 DEPENDPATH += $$PWD/../../../../usr/local/include

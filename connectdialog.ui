@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>613</width>
-    <height>448</height>
+    <width>619</width>
+    <height>521</height>
    </rect>
   </property>
   <property name="mouseTracking">
@@ -35,7 +35,7 @@
       </size>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>3</number>
      </property>
      <property name="usesScrollButtons">
       <bool>false</bool>
@@ -55,7 +55,6 @@
      <widget class="QWidget" name="tabClient">
       <property name="font">
        <font>
-        <weight>75</weight>
         <bold>true</bold>
        </font>
       </property>
@@ -135,7 +134,6 @@
      <widget class="QWidget" name="tabServer">
       <property name="font">
        <font>
-        <weight>75</weight>
         <bold>true</bold>
        </font>
       </property>
@@ -154,6 +152,7 @@
        <property name="font">
         <font>
          <pointsize>8</pointsize>
+         <bold>true</bold>
         </font>
        </property>
       </widget>
@@ -162,8 +161,8 @@
         <rect>
          <x>280</x>
          <y>60</y>
-         <width>292</width>
-         <height>96</height>
+         <width>291</width>
+         <height>101</height>
         </rect>
        </property>
        <property name="title">
@@ -256,9 +255,9 @@
        <property name="geometry">
         <rect>
          <x>20</x>
-         <y>280</y>
+         <y>300</y>
          <width>561</width>
-         <height>17</height>
+         <height>101</height>
         </rect>
        </property>
        <property name="text">

@@ -12,6 +12,7 @@
 #include "torprocess.h"
 #include <QTimer>
 #include <QDateTime>
+#include "serverctrl.h"
 
 ConnectDialog::ConnectDialog(QWidget *parent,
 			     QMainWindow * mainwindow,
@@ -227,18 +228,18 @@ void ConnectDialog::onPushButtonLaunchServer ()
 
   if (!worked) 
     {
-	  QMessageBox::warning(this, "Illegal entry", 
-			    "Socket number expected in range 49152 ... 65535. "
+	  QMessageBox::warning(this, "Illegal entry",
+                "Socket number expected in range 2001 ... 65535. "
 			       );
 
 	  return;
     }
 
   //   49152–65535
-  else if (portnumber16 < 49152)
+  else if (portnumber16 < 2001)
     {
 	  QMessageBox::warning(this, "Out of recommended range", 
-			    "Socket number expected in range 49152 ... 65535. "
+                "Socket number expected in range 2001 ... 65535. "
 			       );
 
 	  return;
@@ -261,10 +262,11 @@ void ConnectDialog::onPushButtonLaunchServer ()
     }
   else
     {
+      m_serverctrl = new ServerController ( portnumber16 );
       ui->labelServerInfo_2
-->setText(tr("The server is running on\n\nIP: %1\nport: %2\n\n"
-                            "Run the Fortune Client example now.")
-                         .arg("127.0.0.1").arg(m_fortuneserver->serverPort()));
+->setText( tr ("The server is running using port: %1\n"
+                          )
+             .arg(m_fortuneserver->serverPort()));
     }
       
 }

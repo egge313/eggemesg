@@ -3,13 +3,14 @@
 
 #include <QDialog>
 #include "fortuneserver.h"
-#include "fortunethread.h"
+// #include "fortunethread.h"
 #include "mainwindow.h"
 #include <QTcpSocket>
 #include <QDataStream>
 // #include <QNetworkSession>
 // #include <QNetworkConfigurationManager>
 #include "torprocess.h"
+#include "serverctrl.h"
 
 namespace Ui {
 class ConnectDialog;
@@ -51,6 +52,7 @@ class ConnectDialog : public QDialog
    // QNetworkSession * m_networksession = nullptr;
    QString currentFortune = "";
    TorProcessThread * m_torprocess = nullptr;
+   ServerController* m_serverctrl = nullptr;
 
  private:
     Ui::ConnectDialog *ui;

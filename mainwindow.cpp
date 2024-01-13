@@ -42,6 +42,10 @@ MainWindow::MainWindow(QWidget *parent) :
     // set application icon
     QIcon windowicon(":/images/icon.png");
     setWindowIcon(windowicon);
+
+    // Tell them that we started.
+    QString startmsg = QString ( "Eggemesg " ) + QString ( EGGEMESG_VERSION );
+    ui->textEditMessages->append ( startmsg );
 }
 
 
@@ -71,7 +75,7 @@ void MainWindow::OnClickedLoginRegister()
     {
     case QDialog::Accepted: // success
        ui->statusbar->showMessage(
-				  "Password success",
+                  "Password accepted",
 			    3000);
 
        ud = m_pwdlg->getUserData();
@@ -82,7 +86,7 @@ void MainWindow::OnClickedLoginRegister()
        break;
     case QDialog::Rejected: // failure
        ui->statusbar->showMessage(
-				  "Password reject",
+                  "Password rejected",
 			    3000);
        // ud = m_pwdlg->getUserData();
        // Q_ASSERT(NULL != ud);
@@ -127,9 +131,8 @@ void MainWindow::OnClickedSetKeys()
 
 void MainWindow::OnClickedLogout()
 {
-  ui->statusbar->showMessage( "User logging out",
+    ui->statusbar->showMessage( "User logging out",
 			      3000);
-
   close();
 }
 
