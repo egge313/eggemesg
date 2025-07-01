@@ -92,7 +92,7 @@ QFrame {
     background:
     qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
                 stop: 0 cornsilk, stop:  0.8 #ebf1bd,
-		stop: 1 #ecf5b9);
+                stop: 1 lightyellow); /* was: #ecf5b9 */
     border-width: 1px;
     padding: 1px;
     border-style: solid;

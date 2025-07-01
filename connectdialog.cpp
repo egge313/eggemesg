@@ -4,14 +4,15 @@
 #include <QNetworkInterface>
 #include "fortuneserver.h"
 #include <QMessageBox>
-#include <QNetworkConfigurationManager>
-#include <QNetworkSession>
+#include <QNetworkInformation>
+// #include <QNetworkSession>
 #include <QSettings>
 #include "curlpost.h"
 #include <QTime>
 #include "torprocess.h"
 #include <QTimer>
 #include <QDateTime>
+#include <QRandomGenerator>
 
 ConnectDialog::ConnectDialog(QWidget *parent,
 			     QMainWindow * mainwindow,
@@ -36,7 +37,7 @@ ConnectDialog::ConnectDialog(QWidget *parent,
     ui->comboBoxServerIP->addItem("localhost");
     ui->comboBoxServerIP->addItem("127.0.0.1");    
     m_instream.setDevice(m_tcpsocket);
-    m_instream.setVersion(QDataStream::Qt_5_7); // Qt 5.7 is the earliest
+    m_instream.setVersion(QDataStream::Qt_6_9); // Qt 6.9 is the earliest
                                                 // version with 
                                                 // a compatible interface
 
@@ -45,7 +46,7 @@ ConnectDialog::ConnectDialog(QWidget *parent,
     connect(m_tcpsocket, &QIODevice::readyRead, this,
 	    &ConnectDialog::readFortune);
     //! [2] //! [4]
-    connect(m_tcpsocket, 
+    /* connect(m_tcpsocket,
 	    QOverload<QAbstractSocket::SocketError>::of(
 						&QAbstractSocket::error),
 	    //! [3]
@@ -68,15 +69,16 @@ ConnectDialog::ConnectDialog(QWidget *parent,
 	  QNetworkConfiguration::Discovered) {
 	config = manager.defaultConfiguration();
       }
-
-      m_networksession = new QNetworkSession(config, this);
-      connect(m_networksession, &QNetworkSession::opened, this,
-	      &ConnectDialog::sessionOpened);
+*/
+      // egge: work on this -- m_networksession = new QNetworkSession(config, this);
+      // egge: work on this -- connect(m_networksession, &QNetworkSession::opened, this,
+    // egge: work on this --   &ConnectDialog::sessionOpened);
 
       // getFortuneButton->setEnabled(false);
-      ui->labelClientInfo_2->setText(tr("Opening network session."));
+  /*    ui->labelClientInfo_2->setText(tr("Opening network session."));
       m_networksession->open();
-    }
+    } */
+    m_EggemesgServer = new egge::server::WebSocketServer ( 8888, this );
     tabTorControlUpdate();
 }
 
@@ -185,15 +187,15 @@ void ConnectDialog::tabTorControlUpdateHandler()
 void ConnectDialog::tabTorControlGeneratePassword (QString & password)
 {
   QString table =
-    "qwertyuiopasdfghjklzxcvbnm1234567890QWERTYUIOPASDFGHJKLZXCVBNM";
+    "qwertyuiopasdfghjklzxcvbnm1234567890QWERTYUIOPASDFGHJKLZXCVBNM!#¤%&()=?";
   int siz = table.length();
   QString str;
   str.resize(40);
-  QDateTime now = QDateTime::currentDateTime();
-  qsrand (now.toMSecsSinceEpoch());
+  // DateTime now = QDateTime::currentDateTime();
+  // qsrand (now.toMSecsSinceEpoch());
   for (int s = 0; s < 40 ; ++s)
     {
-      str[s] = table[qrand() % siz];
+      str[s] = table[ QRandomGenerator::global()->generate() % siz];
     }
   password = str;
 }
@@ -264,14 +266,24 @@ void ConnectDialog::onPushButtonLaunchServer ()
       
 }
 
-bool ConnectDialog::isonline (const QNetworkConfigurationManager & mgr)
+bool ConnectDialog::isonline ()
 {
-  QList<QNetworkConfiguration> activeConfigs =
-    mgr.allConfigurations(QNetworkConfiguration::Active);
-  if (activeConfigs.count() > 0)
-    return mgr.isOnline();
-  else
-    return false;
+        if ( QNetworkInformation::loadDefaultBackend() && QNetworkInformation::loadBackendByFeatures( QNetworkInformation::Feature::Reachability ) )
+        {
+            QNetworkInformation* net_info = QNetworkInformation::instance();
+            if ( nullptr != net_info ) {
+                if(net_info->reachability() == QNetworkInformation::Reachability::Online) {
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            }
+            else
+                return false;
+        }
+        else
+            return false;
 }
 
 void ConnectDialog::accept ()
@@ -409,7 +421,7 @@ void Client::enableGetFortuneButton()
 void ConnectDialog::sessionOpened()
 {
     // Save the used configuration
-    QNetworkConfiguration config = m_networksession->configuration();
+    /* QNetworkConfiguration config = m_networksession->configuration();
     QString id;
     if (config.type() == QNetworkConfiguration::UserChoice)
         id = m_networksession->sessionProperty(
@@ -421,7 +433,7 @@ void ConnectDialog::sessionOpened()
     settings.beginGroup(QLatin1String("QtNetwork"));
     settings.setValue(QLatin1String("DefaultNetworkConfiguration"), id);
     settings.endGroup();
-
+    */
     /*
     statusLabel->setText(tr("This examples requires that you run the "
                             "Fortune Server example as well."));

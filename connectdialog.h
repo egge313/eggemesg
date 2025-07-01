@@ -1,5 +1,4 @@
-#ifndef CONNECTDIALOG_H
-#define CONNECTDIALOG_H
+#pragma once
 
 #include <QDialog>
 #include "fortuneserver.h"
@@ -7,9 +6,9 @@
 #include "mainwindow.h"
 #include <QTcpSocket>
 #include <QDataStream>
-#include <QNetworkSession>
-#include <QNetworkConfigurationManager>
+// egge. #include <QNetworkSession>
 #include "torprocess.h"
+#include "websocketserver.h"
 
 namespace Ui {
 class ConnectDialog;
@@ -44,16 +43,15 @@ class ConnectDialog : public QDialog
    void showhostname();
    void showhostip();
    void readFortune();
-   bool isonline (const QNetworkConfigurationManager & mgr);
+   bool isonline ();
    void tabTorControlUpdate();
    void tabTorControlGeneratePassword (QString & password);
    FortuneServer * m_fortuneserver = nullptr;
-   QNetworkSession * m_networksession = nullptr;
+   // egge: QNetworkSession * m_networksession = nullptr;
    QString currentFortune = "";
    TorProcessThread * m_torprocess = nullptr;
 
  private:
-    Ui::ConnectDialog *ui;
+     Ui::ConnectDialog * ui;
+     egge::server::WebSocketServer * m_EggemesgServer;
 };
-
-#endif // CONNECTDIALOG_H

@@ -64,7 +64,7 @@ public slots:
 		  emit resultReady("Tor is OFF"); 
 		}
 	    }
-	  catch (CurlpostException excp)
+      catch (CurlpostException & excp)
 	    {
 		  emit resultReady("Tor is OFF"); 
 	    }

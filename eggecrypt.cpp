@@ -334,6 +334,12 @@ bool EggeCrypt::decode (const gcry_sexp_t & ciph,
 
 void EggeCrypt::gcrypt_init()
 {
+    static bool been_here = false;
+
+    if ( been_here )
+    {
+        return;
+    }
     /* Version check should be the very first call because it
        makes sure that important subsystems are intialized. */
     if (!gcry_check_version (GCRYPT_VERSION))
@@ -367,9 +373,10 @@ void EggeCrypt::gcrypt_init()
 
     if (err) {
         xerr("gcrypt: failed initialization");
-	return;
+        return;
     }
     
+    been_here = true;
     return;
 }
 

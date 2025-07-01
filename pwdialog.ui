@@ -6,15 +6,14 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>481</width>
-    <height>187</height>
+    <width>525</width>
+    <height>192</height>
    </rect>
   </property>
   <property name="font">
    <font>
     <family>Noto Sans Mono CJK TC</family>
     <pointsize>11</pointsize>
-    <weight>75</weight>
     <bold>true</bold>
    </font>
   </property>
@@ -35,9 +34,8 @@
       <font>
        <family>Noto Sans</family>
        <pointsize>9</pointsize>
-       <weight>9</weight>
        <italic>false</italic>
-       <bold>false</bold>
+       <fontweight></fontweight>
       </font>
      </property>
      <property name="cursor">
@@ -50,22 +48,21 @@
       <string notr="true">font: 75 9pt &quot;Noto Sans&quot;;</string>
      </property>
      <property name="tabShape">
-      <enum>QTabWidget::Rounded</enum>
+      <enum>QTabWidget::TabShape::Rounded</enum>
      </property>
      <property name="currentIndex">
       <number>2</number>
      </property>
      <property name="elideMode">
-      <enum>Qt::ElideRight</enum>
+      <enum>Qt::TextElideMode::ElideRight</enum>
      </property>
      <widget class="QWidget" name="tabLogin">
       <property name="font">
        <font>
         <family>Noto Sans</family>
         <pointsize>9</pointsize>
-        <weight>9</weight>
         <italic>false</italic>
-        <bold>false</bold>
+        <fontweight></fontweight>
        </font>
       </property>
       <property name="cursor">
@@ -114,7 +111,7 @@
        <item row="2" column="1">
         <widget class="QLineEdit" name="lineEditPw1">
          <property name="echoMode">
-          <enum>QLineEdit::Password</enum>
+          <enum>QLineEdit::EchoMode::Password</enum>
          </property>
         </widget>
        </item>
@@ -154,7 +151,7 @@
        <item row="1" column="1">
         <widget class="QLineEdit" name="lineEditPw2">
          <property name="echoMode">
-          <enum>QLineEdit::Password</enum>
+          <enum>QLineEdit::EchoMode::Password</enum>
          </property>
         </widget>
        </item>
@@ -168,7 +165,7 @@
        <item row="2" column="1">
         <widget class="QLineEdit" name="lineEditPwRepeat2">
          <property name="echoMode">
-          <enum>QLineEdit::Password</enum>
+          <enum>QLineEdit::EchoMode::Password</enum>
          </property>
         </widget>
        </item>
@@ -182,9 +179,8 @@
        <font>
         <family>Noto Sans</family>
         <pointsize>9</pointsize>
-        <weight>9</weight>
         <italic>false</italic>
-        <bold>false</bold>
+        <fontweight></fontweight>
        </font>
       </property>
       <property name="toolTip">
@@ -209,7 +205,7 @@
         <string>Loggin in with this password leaves schorched earth behind.</string>
        </property>
        <property name="textFormat">
-        <enum>Qt::PlainText</enum>
+        <enum>Qt::TextFormat::PlainText</enum>
        </property>
        <property name="scaledContents">
         <bool>true</bool>
@@ -251,7 +247,7 @@
         </rect>
        </property>
        <property name="echoMode">
-        <enum>QLineEdit::Password</enum>
+        <enum>QLineEdit::EchoMode::Password</enum>
        </property>
       </widget>
       <widget class="QLineEdit" name="lineEditPw3Repeat">
@@ -264,7 +260,7 @@
         </rect>
        </property>
        <property name="echoMode">
-        <enum>QLineEdit::Password</enum>
+        <enum>QLineEdit::EchoMode::Password</enum>
        </property>
       </widget>
      </widget>
@@ -279,16 +275,16 @@
       <bool>true</bool>
      </property>
      <property name="focusPolicy">
-      <enum>Qt::StrongFocus</enum>
+      <enum>Qt::FocusPolicy::StrongFocus</enum>
      </property>
      <property name="layoutDirection">
-      <enum>Qt::LeftToRight</enum>
+      <enum>Qt::LayoutDirection::LeftToRight</enum>
      </property>
      <property name="orientation">
-      <enum>Qt::Horizontal</enum>
+      <enum>Qt::Orientation::Horizontal</enum>
      </property>
      <property name="standardButtons">
-      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+      <set>QDialogButtonBox::StandardButton::Cancel|QDialogButtonBox::StandardButton::Ok</set>
      </property>
      <property name="centerButtons">
       <bool>false</bool>

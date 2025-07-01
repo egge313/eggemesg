@@ -3,14 +3,14 @@
  <class>MainWindow</class>
  <widget class="QMainWindow" name="MainWindow">
   <property name="windowModality">
-   <enum>Qt::NonModal</enum>
+   <enum>Qt::WindowModality::NonModal</enum>
   </property>
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>722</width>
-    <height>566</height>
+    <width>809</width>
+    <height>643</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -60,25 +60,25 @@
        <string notr="true"/>
       </property>
       <property name="frameShape">
-       <enum>QFrame::StyledPanel</enum>
+       <enum>QFrame::Shape::StyledPanel</enum>
       </property>
       <property name="frameShadow">
-       <enum>QFrame::Sunken</enum>
+       <enum>QFrame::Shadow::Sunken</enum>
       </property>
       <widget class="QFrame" name="frame003">
        <property name="geometry">
         <rect>
          <x>10</x>
          <y>46</y>
-         <width>681</width>
+         <width>771</width>
          <height>111</height>
         </rect>
        </property>
        <property name="frameShape">
-        <enum>QFrame::StyledPanel</enum>
+        <enum>QFrame::Shape::StyledPanel</enum>
        </property>
        <property name="frameShadow">
-        <enum>QFrame::Raised</enum>
+        <enum>QFrame::Shadow::Raised</enum>
        </property>
        <widget class="QLabel" name="labelInformation">
         <property name="geometry">
@@ -99,8 +99,8 @@
         <rect>
          <x>10</x>
          <y>177</y>
-         <width>681</width>
-         <height>141</height>
+         <width>771</width>
+         <height>301</height>
         </rect>
        </property>
        <widget class="QTextEdit" name="textEditMyMessages">
@@ -108,7 +108,7 @@
          <rect>
           <x>10</x>
           <y>80</y>
-          <width>661</width>
+          <width>751</width>
           <height>121</height>
          </rect>
         </property>
@@ -117,8 +117,8 @@
       <widget class="QPushButton" name="Send">
        <property name="geometry">
         <rect>
-         <x>540</x>
-         <y>360</y>
+         <x>650</x>
+         <y>550</y>
          <width>125</width>
          <height>30</height>
         </rect>
@@ -130,9 +130,9 @@
       <widget class="QTextEdit" name="textEditMessages">
        <property name="geometry">
         <rect>
-         <x>25</x>
-         <y>340</y>
-         <width>371</width>
+         <x>30</x>
+         <y>490</y>
+         <width>461</width>
          <height>82</height>
         </rect>
        </property>
@@ -143,10 +143,10 @@
         </size>
        </property>
        <property name="horizontalScrollBarPolicy">
-        <enum>Qt::ScrollBarAlwaysOff</enum>
+        <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOff</enum>
        </property>
        <property name="sizeAdjustPolicy">
-        <enum>QAbstractScrollArea::AdjustToContents</enum>
+        <enum>QAbstractScrollArea::SizeAdjustPolicy::AdjustToContents</enum>
        </property>
       </widget>
       <widget class="QPushButton" name="pushButtonLogin">
@@ -167,7 +167,6 @@
        <property name="font">
         <font>
          <pointsize>10</pointsize>
-         <weight>75</weight>
          <bold>true</bold>
         </font>
        </property>
@@ -178,7 +177,7 @@
         <bool>true</bool>
        </property>
        <property name="focusPolicy">
-        <enum>Qt::StrongFocus</enum>
+        <enum>Qt::FocusPolicy::StrongFocus</enum>
        </property>
        <property name="toolTip">
         <string/>
@@ -217,7 +216,6 @@
        <property name="font">
         <font>
          <pointsize>10</pointsize>
-         <weight>75</weight>
          <italic>false</italic>
          <bold>true</bold>
         </font>
@@ -229,7 +227,7 @@
         <bool>true</bool>
        </property>
        <property name="focusPolicy">
-        <enum>Qt::StrongFocus</enum>
+        <enum>Qt::FocusPolicy::StrongFocus</enum>
        </property>
        <property name="statusTip">
         <string>Set cryptographic keys for encryption and signing</string>
@@ -262,7 +260,6 @@
        <property name="font">
         <font>
          <pointsize>10</pointsize>
-         <weight>75</weight>
          <italic>false</italic>
          <bold>true</bold>
         </font>
@@ -274,7 +271,7 @@
         <bool>true</bool>
        </property>
        <property name="focusPolicy">
-        <enum>Qt::StrongFocus</enum>
+        <enum>Qt::FocusPolicy::StrongFocus</enum>
        </property>
        <property name="statusTip">
         <string>Connect to network</string>
@@ -308,7 +305,7 @@
         </size>
        </property>
        <property name="focusPolicy">
-        <enum>Qt::NoFocus</enum>
+        <enum>Qt::FocusPolicy::NoFocus</enum>
        </property>
        <property name="text">
         <string/>
