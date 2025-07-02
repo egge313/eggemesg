@@ -14,6 +14,7 @@ namespace egge {
             Q_OBJECT
             public:
                 WebSocketServer(int port, QObject* parent = nullptr);
+                bool isListening() { if ( nullptr == m_ws_server ) return false; else return m_ws_server->isListening(); }
             private:
                 void handle_new_connection();
                 void handle_close_connection();

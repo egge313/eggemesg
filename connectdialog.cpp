@@ -5,7 +5,6 @@
 #include "fortuneserver.h"
 #include <QMessageBox>
 #include <QNetworkInformation>
-// #include <QNetworkSession>
 #include <QSettings>
 #include "curlpost.h"
 #include <QTime>
@@ -78,7 +77,12 @@ ConnectDialog::ConnectDialog(QWidget *parent,
   /*    ui->labelClientInfo_2->setText(tr("Opening network session."));
       m_networksession->open();
     } */
-    m_EggemesgServer = new egge::server::WebSocketServer ( 8888, this );
+
+    // Tor Control stuff:
+    ui->comboBoxAvailableServices->addItem("8888");
+    ui->comboBoxAvailableServices->addItem("9999");
+    connect(ui->pushButtonLaunchService, SIGNAL(clicked()),
+            this, SLOT(onPushButtonLaunchService()));
     tabTorControlUpdate();
 }
 
@@ -89,9 +93,9 @@ void ConnectDialog::showhostname()
     {
       QString domain = QHostInfo::localDomainName();
       if (!domain.isEmpty())
-	{
-	  name = name + QChar('.') + domain;
-	}
+        {
+            name = name + QChar('.') + domain;
+        }
     }
   QString hostinfo = QString("Host name: ") + name;
   ui->listWidgetHostInfo->addItem(hostinfo);
@@ -99,24 +103,32 @@ void ConnectDialog::showhostname()
 
 void ConnectDialog::tabTorControlUpdate()
 {
+    return;
   QString controlportpasswd("");
   tabTorControlGeneratePassword (controlportpasswd);
-  m_torprocess = new TorProcessThread ("/home/egge/koe/sleepy/build-sleepy-Desktop-Debug/sleepy",
+  m_torprocess = new TorProcessThread ("/home/egge/",
 				       QStringList() 
 					 << "--hash-password"
 					 << controlportpasswd);
   m_torprocess->start();
   ui->listWidgetTorControlHistory->addItem("Control port password is: " +
 					   controlportpasswd);
-  //  QTimer::singleShot(3000, this, SLOT(tabTorControlUpdateHandler()));
+  QTimer::singleShot(3000, this, SLOT(tabTorControlUpdateHandler()));
 
-  /*
-  while (!m_torprocess->isfinished() || !m_torprocess->erroroccurred())
+  while ( true )
     {
+      if ( m_torprocess->isfinished() )
+        {
+            break;
+        }
+      if ( m_torprocess->erroroccurred() )
+        {
+            break;
+        }
       ui->listWidgetTorControlHistory->addItem("Sleep 200 ms.");
       QThread::msleep(200);
     }
-  */
+
   ui->listWidgetTorControlHistory->addItem("Process exited.");
 
   if (m_torprocess->isfinished())
@@ -137,7 +149,7 @@ void ConnectDialog::tabTorControlUpdate()
   QString controlportpasswordhash = stdoutmsg;
   if (m_torprocess->isfinished())
     {
-      for (int i; ; ++i)
+      for (int i = 0; ; ++i)
 	{
 	  if (controlportpasswordhash.at(i) == '\n')
 	    {
@@ -213,6 +225,31 @@ void ConnectDialog::showhostip()
     for (int i = 0; i < ipAddressesList.size(); ++i) {
         if (ipAddressesList.at(i).isLoopback())
              ui->listWidgetHostInfo->addItem(ipAddressesList.at(i).toString());
+    }
+}
+
+void ConnectDialog::onPushButtonLaunchService ()
+{
+    QString portnumber = ui->comboBoxAvailableServices->currentText();
+
+    if ( portnumber == "" )
+    {
+        QMessageBox::warning(this,
+                             "Port number required",
+                             "First select a port!"
+                            );
+        return;
+    }
+
+    // Launch an eggemesg onion (Tor) service.
+    m_EggemesgServer = new egge::server::WebSocketServer ( portnumber.toInt(), this );
+    if ( m_EggemesgServer->isListening() )
+    {
+        ui->listWidgetTorControlHistory->addItem ( "Eggemesg listening port " + portnumber + ".");
+    }
+    else
+    {
+        ui->listWidgetTorControlHistory->addItem ( "Eggemesg started, not yet listening." );
     }
 }
 

@@ -35,6 +35,7 @@ class ConnectDialog : public QDialog
    void onPushButtonLaunchServer ();
    void onPushButtonConnect2Server();
    void onPushButtonTorClientConnect();
+   void onPushButtonLaunchService ();
    void displayError(QAbstractSocket::SocketError socketError);
    void sessionOpened();
    void tabTorControlUpdateHandler();

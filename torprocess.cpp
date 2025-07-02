@@ -15,11 +15,10 @@ void 	started()
 void 	stateChanged(QProcess::ProcessState newState)
   */
 
-  QObject::connect(&m_torprocess, 
-		   SIGNAL(finished(int /* exitCode */,
-				   QProcess::ExitStatus)),
+  QObject::connect(&m_torprocess,
+           SIGNAL(finished(int,QProcess::ExitStatus)),
 		   this,
-		   SLOT(finishedHandler(int, QProcess::ExitStatus)));
+           SLOT(finishedHandler(int,QProcess::ExitStatus)));
 
   m_finished = false;
 

@@ -16,8 +16,8 @@ MainWindow::MainWindow(QWidget *parent) :
     m_statusbarlabel = new QLabel("Starting");
     ui->statusbar->addPermanentWidget(m_statusbarlabel);
     ui->statusbar->showMessage(
-			   "Welcome, your holiness! ", 
-			    5000);
+			   "Welcome, your holiness! ",
+                7000);
 
     connect(ui->pushButtonLogin, SIGNAL(clicked()), this,
 	    SLOT(OnClickedLoginRegister()));
@@ -79,6 +79,7 @@ void MainWindow::OnClickedLoginRegister()
        info = QString("User: ") + QString(ud->m_user);
        ui->labelInformation->setText(info);
        ui->pushButtonSetKeys->setDisabled(false);
+       m_statusbarlabel->setText ( "Logged in" );
        break;
     case QDialog::Rejected: // failure
        ui->statusbar->showMessage(
@@ -109,6 +110,7 @@ void MainWindow::OnClickedSetKeys()
 				  "Set keys:  success",
 			    3000);
        ui->pushButtonConnect->setDisabled(false);
+       m_statusbarlabel->setText ( "Crypto Ready" );
        break;
     case QDialog::Rejected: // failure 
        ui->statusbar->showMessage(
@@ -148,6 +150,7 @@ void MainWindow::OnClickedConnect()
   switch (m_connectdlg->exec())
     {
     case QDialog::Accepted:
+    m_statusbarlabel->setText ( "Connected" );
     case QDialog::Rejected:
     default:
       break;
