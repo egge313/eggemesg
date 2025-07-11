@@ -34,6 +34,8 @@
 #define DIM(v)		     (sizeof(v)/sizeof((v)[0]))
 #define DIMof(type,member)   DIM(((type *)0)->member)
 
+#define BIGENUF 4*1024
+
 
 gcry_mpi_t EggeCrypt::random_mpi_init ()
 {
@@ -79,16 +81,12 @@ void * EggeCrypt::data_from_hex (const char *string, size_t *r_length)
 }
 
 
-char * EggeCrypt::getprintablepubkey ()
+QString EggeCrypt::getPrintablePubKey()
 {
-  char *buf;
-  size_t size;
-
-  size = gcry_sexp_sprint (m_pubk, GCRYSEXP_FMT_ADVANCED, NULL, 0);
-  buf = (char *)gcry_xmalloc (size);
-
-  gcry_sexp_sprint (m_pubk, GCRYSEXP_FMT_ADVANCED, buf, size);
-  return buf;
+  char buf[8*BIGENUF];
+  size_t size = gcry_sexp_sprint ( *m_pubk_ptr, GCRYSEXP_FMT_ADVANCED, NULL, 0 );
+  gcry_sexp_sprint ( *m_pubk_ptr, GCRYSEXP_FMT_ADVANCED, buf, size );
+  return QString(buf);
 }
 
 void EggeCrypt::show_sexp (const char *prefix, gcry_sexp_t a)
@@ -132,10 +130,12 @@ bool EggeCrypt::readfile ()
     
     QByteArray qba = m_password.toUtf8();
     char * pw = qba.data();
-    get_aes_ctx(&m_aes_hd, pw);
+    if ( nullptr == m_aes_hd_ptr )
+        m_aes_hd_ptr = new gcry_cipher_hd_t;
+    get_aes_ctx( m_aes_hd_ptr, pw);
 
     /* Read and decrypt the key pair from disk. */
-    size_t rsa_len = get_keypair_size(1024);
+    size_t rsa_len = get_keypair_size(BIGENUF);
     // void* rsa_buf = calloc(1, rsa_len);
     void* rsa_buf = (void *) gcry_xmalloc (rsa_len);
 
@@ -149,10 +149,9 @@ bool EggeCrypt::readfile ()
 	return false;
     }
 
-
     gcry_error_t err;
 
-    err = gcry_cipher_decrypt(m_aes_hd, (unsigned char*) rsa_buf, 
+    err = gcry_cipher_decrypt( *m_aes_hd_ptr, (unsigned char*) rsa_buf,
                               rsa_len, NULL, 0);
     if (err) {
         xerr("gcrypt: failed to decrypt key pair");
@@ -160,16 +159,30 @@ bool EggeCrypt::readfile ()
     }
 
     /* Load the key pair components into sexps. */
-
-    err = gcry_sexp_new(&m_rsa_keypair, rsa_buf, rsa_len, 0);
-    if (err) {
+    if ( nullptr == m_rsa_keypair_ptr )
+        m_rsa_keypair_ptr = new gcry_sexp_t;
+    err = gcry_sexp_new( m_rsa_keypair_ptr, rsa_buf, rsa_len, 0);
+    if (err)
+    {
         xerr("gcrypt: failed to extract key pair");
-	return false;
+        return false;
     }
 
+    if ( nullptr == m_pubk_ptr )
+        m_pubk_ptr = new gcry_sexp_t;
+    *m_pubk_ptr = gcry_sexp_find_token( *m_rsa_keypair_ptr, "public-key", 0);
 
-    m_pubk = gcry_sexp_find_token(m_rsa_keypair, "public-key", 0);
-    m_privk = gcry_sexp_find_token(m_rsa_keypair, "private-key", 0);
+    if ( nullptr == m_privk_ptr )
+        m_privk_ptr = new gcry_sexp_t;
+    *m_privk_ptr = gcry_sexp_find_token( *m_rsa_keypair_ptr, "private-key", 0);
+
+    // Check sanity of private key.
+    err = gcry_pk_testkey ( *m_privk_ptr );
+    if (err)
+    {
+        xerr ( "gcrypt: Private key not sane.");
+        return false;
+    }
 
     free(rsa_buf);
     fclose(lockf);
@@ -184,25 +197,18 @@ bool EggeCrypt::encode (const unsigned char* clearmessage, gcry_sexp_t & cipher)
   gcry_sexp_t data;
   const unsigned char* s = clearmessage;
   gcry_error_t err;
-  err = gcry_mpi_scan(&msg, GCRYMPI_FMT_USG, s, 
-		      strlen((const char*) s), NULL);
+
+  err = gcry_mpi_scan(&msg, GCRYMPI_FMT_USG, s, strlen((const char*) s), NULL);
   if (err) {
-    xerr("failed to create a mpi from the message");
+    xerr("failed to create an mpi from the message");
     return false;
   }
   
-  // gcry_mpi_t random313 = random_mpi_init();
-  
-  //    err = gcry_sexp_build(&data, NULL,
-  //                     "(data (flags raw) (value %m))", msg);
   err = gcry_sexp_build(&data, NULL,
 			"(data (flags oaep)"
-			// "(hash-algo sha1)"
-			"(value %m)"
-			// "(random-override %m)"
+			"  (value %m)"
 			")",
-			msg /*,
-			      random313 */
+			msg
 			);
   
   {
@@ -219,16 +225,67 @@ bool EggeCrypt::encode (const unsigned char* clearmessage, gcry_sexp_t & cipher)
   
   /* Encrypt the message. */
   
-  err = gcry_pk_encrypt(&cipher, data, m_pubk);
+  err = gcry_pk_encrypt(&cipher, data, *m_pubk_ptr);
   if (err)
     {
-      char tmp[1024];
-      gpg_strerror_r(err, tmp, 1024);
+      char tmp[BIGENUF];
+      gpg_strerror_r(err, tmp, BIGENUF);
       xerr(tmp);
       return false;
     }
   return true;
 }
+
+// Encrypt message using any RSA public key.
+bool EggeCrypt::encode (const unsigned char* clearmessage,
+            const gcry_sexp_t & pubk,
+			gcry_sexp_t & cipher)
+{
+  /* Create a message. */
+  gcry_mpi_t msg;
+  gcry_sexp_t data;
+  const unsigned char* s = clearmessage;
+  gcry_error_t err;
+
+  err = gcry_mpi_scan(&msg, GCRYMPI_FMT_USG, s, strlen((const char*) s), NULL);
+  if (err) 
+    {
+      xerr("failed to create an mpi from the message");
+      return false;
+    }
+  
+  err = gcry_sexp_build(&data, NULL,
+			"(data (flags oaep)"
+			"  (value %m)"
+			")",
+			msg
+			);
+  
+  {
+    
+    show_sexp ("data -- \n", data);
+    
+  }
+  
+  if (err)
+    {
+      xerr("failed to create a sexp from the message");
+      return false;
+    }
+  
+  /* Encrypt the message. */
+  
+  err = gcry_pk_encrypt ( &cipher, data, pubk );
+  if (err)
+    {
+      char tmp[BIGENUF];
+      gpg_strerror_r(err, tmp, BIGENUF);
+      xerr(tmp);
+      return false;
+    }
+  return true;
+}
+
 
    /* Extract result of RSA operation (i.e. the actual encrypted data)
        from ciph.
@@ -257,10 +314,7 @@ bool EggeCrypt::decode (const gcry_sexp_t & ciph,
 
     err = gcry_sexp_build (&ciph2, NULL,
 			   "(enc-val (flags oaep)"
-			   // "(hash-algo sha1)"
-			   // "(random-override %m)"
 			   "(rsa (a %b)))",
-			   // random313,
 			   alen, a);
 
 #ifdef EGGECRYPTTEST
@@ -270,17 +324,17 @@ bool EggeCrypt::decode (const gcry_sexp_t & ciph,
 #endif
 
     if (err) {
-	char tmp[1024];
-	gpg_strerror_r(err, tmp, 1024);
+    char tmp[BIGENUF];
+    gpg_strerror_r(err, tmp, BIGENUF);
 
         xerr("gcrypt: building decryption context failed");
 	return false;
     }
 
-    err = gcry_pk_decrypt(&plain, ciph2, m_privk);
+    err = gcry_pk_decrypt(&plain, ciph2, *m_privk_ptr);
     if (err) {
-	char tmp[1024];
-	gpg_strerror_r(err, tmp, 1024);
+    char tmp[BIGENUF];
+    gpg_strerror_r(err, tmp, BIGENUF);
 
         xerr("gcrypt: decryption failed");
 	return false;
@@ -326,7 +380,7 @@ bool EggeCrypt::decode (const gcry_sexp_t & ciph,
     gcry_sexp_release(ciph);
     gcry_sexp_release(ciph2);
     gcry_sexp_release(plain);
-    gcry_cipher_close(m_aes_hd);
+    gcry_cipher_close( *m_aes_hd_ptr );
 
     return true;
 }
@@ -452,17 +506,17 @@ int EggeCrypt::generatekeys()
 
     gcry_error_t err = 0;
     gcry_sexp_t rsa_parms;
-    gcry_sexp_t rsa_keypair;
+    gcry_sexp_t * m_rsa_keypair_ptr = new gcry_sexp_t;
 
 
 
-    //    err = gcry_sexp_build(&rsa_parms, NULL, "(genkey (rsa (nbits 4:1024)))");
+    //    err = gcry_sexp_build(&rsa_parms, NULL, "(genkey (rsa (nbits 4:BIGENUF)))");
     err = gcry_sexp_build(&rsa_parms, NULL, "(genkey (rsa (nbits 4:1024)))");
     if (err) {
         xerr("gcrypt: failed to create rsa params");
     }
 
-    err = gcry_pk_genkey(&rsa_keypair, rsa_parms);
+    err = gcry_pk_genkey( m_rsa_keypair_ptr, rsa_parms);
     if (err) {
         xerr("gcrypt: failed to create rsa key pair");
     }
@@ -479,12 +533,12 @@ int EggeCrypt::generatekeys()
     get_aes_ctx(&aes_hd, pw);
 
     /* Encrypt the RSA key pair. */
-    size_t rsa_len = get_keypair_size(1024);
+    size_t rsa_len = get_keypair_size(BIGENUF);
     void* rsa_buf = calloc(1, rsa_len);
     if (!rsa_buf) {
         xerr("malloc: could not allocate rsa buffer");
     }
-    gcry_sexp_sprint(rsa_keypair, GCRYSEXP_FMT_CANON, rsa_buf, rsa_len);
+    gcry_sexp_sprint ( *m_rsa_keypair_ptr, GCRYSEXP_FMT_ADVANCED, rsa_buf, rsa_len);
 
     err = gcry_cipher_encrypt(aes_hd, (unsigned char*) rsa_buf, 
                               rsa_len, NULL, 0);
@@ -499,7 +553,7 @@ int EggeCrypt::generatekeys()
     }
 
     /* Release contexts. */
-    gcry_sexp_release(rsa_keypair);
+    // gcry_sexp_release(rsa_keypair);
     gcry_sexp_release(rsa_parms);
     gcry_cipher_close(aes_hd);
     free(rsa_buf);
@@ -508,9 +562,43 @@ int EggeCrypt::generatekeys()
     return 0;
 }
 
+QString EggeCrypt::getKeyPairAsString()
+{
+  /* Extract the RSA key pair. */
+  size_t rsa_max_len = get_keypair_size(BIGENUF);
+  char rsa_buf[BIGENUF];
+
+  for (int i = 0; i < (int)rsa_max_len; i++ )
+  {
+      rsa_buf[i] = '\0';
+  }
+
+  if ( nullptr == m_rsa_keypair_ptr )
+      return QString ( "" );
+  size_t siz = gcry_sexp_sprint( *m_rsa_keypair_ptr, GCRYSEXP_FMT_ADVANCED,
+                (void *)rsa_buf, rsa_max_len );
+  char * tmp = (char *)rsa_buf;
+  tmp[siz] = '\0';
+  QString retval(tmp);
+  return retval;
+}
+
 EggeCrypt::~EggeCrypt()
 {
-    gcry_sexp_release(m_rsa_keypair);
-    gcry_sexp_release(m_pubk);
-    gcry_sexp_release(m_privk);
+    if ( nullptr != m_rsa_keypair_ptr )
+    {
+        gcry_sexp_release( *m_rsa_keypair_ptr );
+        delete m_rsa_keypair_ptr;
+    }
+    if ( nullptr != m_pubk_ptr )
+    {
+        gcry_sexp_release( *m_pubk_ptr );
+        delete m_pubk_ptr;
+    }
+    if ( nullptr != m_privk_ptr )
+    {
+        gcry_sexp_release( *m_privk_ptr );
+        delete m_privk_ptr;
+    }
+    delete m_aes_hd_ptr;
 }

@@ -35,6 +35,8 @@ SOURCES += \
     fortunethread.cpp \
     curlpost.cpp \
     torprocess.cpp \
+    userdata.cpp \
+    websocketclient.cpp \
     websocketserver.cpp
 
 HEADERS += \
@@ -50,6 +52,7 @@ HEADERS += \
     curlpost.h \
     version.h \
     torprocess.h \
+    websocketclient.h \
     websocketserver.h
 
 FORMS += \

@@ -23,14 +23,15 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
  public:
-    PwDialog *      m_pwdlg = NULL;
-    CryptoDialog *  m_cryptodlg = NULL;
-    EggeCrypt *     m_eggecrypt = NULL;
-    ConnectDialog * m_connectdlg = NULL;
-    FortuneServer * m_fortuneserver = NULL;
+    PwDialog *      m_pwdlg = nullptr;
+    CryptoDialog *  m_cryptodlg = nullptr;
+    EggeCrypt *     m_eggecrypt = nullptr;
+    ConnectDialog * m_connectdlg = nullptr;
 
  public:
     explicit MainWindow(QWidget *parent = 0);
+    void showInfo ( QString infoMessage );
+    void showMessage ( QString message );
     ~MainWindow();
 
  public slots:
@@ -44,7 +45,7 @@ class MainWindow : public QMainWindow
     void setStyleSheet(QString & sheetName);
     Ui::MainWindow *ui;
     QString eggemesg_version = EGGEMESG_VERSION;
-    QLabel* m_statusbarlabel = NULL;
+    QLabel* m_statusbarlabel = nullptr;
 };
 
 #endif // MAINWINDOW_H

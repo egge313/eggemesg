@@ -60,10 +60,10 @@ void MainWindow::OnClickedLoginRegister()
   {
     QString str("Password dialog returns: ");
     QString rv;
+
     rv.setNum(retval);
     str.append(rv);
     debugprint(str);
-
   }
   UserData* ud = nullptr;
   QString info = "";
@@ -76,7 +76,7 @@ void MainWindow::OnClickedLoginRegister()
 
        ud = m_pwdlg->getUserData();
        Q_ASSERT(NULL != ud);
-       info = QString("User: ") + QString(ud->m_user);
+       info = QString("User: ") + QString(ud->getUser());
        ui->labelInformation->setText(info);
        ui->pushButtonSetKeys->setDisabled(false);
        m_statusbarlabel->setText ( "Logged in" );
@@ -107,21 +107,21 @@ void MainWindow::OnClickedSetKeys()
     {
      case QDialog::Accepted: // success
        ui->statusbar->showMessage(
-				  "Set keys:  success",
+				  "Set keys: success",
 			    3000);
        ui->pushButtonConnect->setDisabled(false);
        m_statusbarlabel->setText ( "Crypto Ready" );
        break;
     case QDialog::Rejected: // failure 
        ui->statusbar->showMessage(
-				  "Set keys:  reject",
+				  "Set keys: reject",
 			    3000);
 
        break;
-    default:
+    default: // Something unexpected happened.
        ui->statusbar->showMessage(
-				  "Set keys:  FAILURE",
-			    3000);
+				  "Set keys: FAILURE",
+				  3000 );
 
 
     }
@@ -130,7 +130,7 @@ void MainWindow::OnClickedSetKeys()
 void MainWindow::OnClickedLogout()
 {
   ui->statusbar->showMessage( "User logging out",
-			      3000);
+			      3000 );
 
   close();
 }
@@ -150,11 +150,27 @@ void MainWindow::OnClickedConnect()
   switch (m_connectdlg->exec())
     {
     case QDialog::Accepted:
-    m_statusbarlabel->setText ( "Connected" );
+        {
+            m_statusbarlabel->setText ( "Connected" );
+            egge::server::WebSocketServer * wss = m_connectdlg->getServer();
+
+            QString mymessage("");
+            if ( wss->getMessage ( mymessage, true ))
+                ui->textEditMyMessages->append ( mymessage );
+        }
+        break;
     case QDialog::Rejected:
+        m_statusbarlabel->setText ( "Local" );
+        break;
     default:
-      break;
+        m_statusbarlabel->setText ( "??Confused??" );
+        break;
     }
+}
+
+void MainWindow::showInfo ( QString infoMessage )
+{
+    ui->textEditMyMessages->append ( infoMessage );
 }
 
 

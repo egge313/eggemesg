@@ -88,11 +88,11 @@ QListView::item:hover {
    we kill the padding and enlarge the border. This makes the items
    glow. */
 
-QFrame {
+QFrame, QDialog {
     background:
     qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                stop: 0 cornsilk, stop:  0.8 #ebf1bd,
-                stop: 1 lightyellow); /* was: #ecf5b9 */
+                stop: 0 lightyellow, stop: 1 0.67 cornsilk,
+                stop: 2 #ecf5b9); /* was: #ecf5b9 */
     border-width: 1px;
     padding: 1px;
     border-style: solid;

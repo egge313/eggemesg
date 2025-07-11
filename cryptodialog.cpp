@@ -26,15 +26,17 @@ CryptoDialog::CryptoDialog(QWidget * parent, UserData * userdata) :
 
 void CryptoDialog::onGeneratePushButtonClicked ()
 {
-  EggeCrypt * ecrypt = new EggeCrypt(m_userdata->m_user,
-				     m_userdata->m_password);
+    EggeCrypt * ecrypt = new EggeCrypt(m_userdata->getUser(),
+                                      m_userdata->getPassword());
 
   ui->generateLabel->setText(tr("Generating RSA keys..."));
   ecrypt->generatekeys();
   ui->generateLabel->setText(tr("Generating RSA keys... SUCCESS!"));
   ecrypt->initialize();
-  debugprint((char *)ecrypt->getprintablepubkey());
-  ui->keyTextBrowser->setText(tr(ecrypt->getprintablepubkey()));
+  // debugprint(ecrypt->getPrintablePubKey().toUtf8().to);
+  ui->keyTextBrowser->setText(ecrypt->getPrintablePubKey());
+  m_userdata->setOwnKeyPair ( ecrypt->getKeyPair() );
+  m_userdata->writeFile( "eggemesg.json" );
 }
 
 void CryptoDialog::onSelectionChanged()
