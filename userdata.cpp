@@ -113,6 +113,7 @@ bool UserData::writeFile ( const QString fileName )
   root["ScorchedEarthPassword"] = m_scorchedearthpassword;
   root["KeyPair"] = m_OwnKeyPair == nullptr ? QString ( "nullptr" ) : m_OwnKeyPair->getKeyPairAsString();
 
+  /*
   QJsonArray knownPublicKeys;
   if ( ! m_KnownPublicKeys.isEmpty() )
     {
@@ -122,6 +123,7 @@ bool UserData::writeFile ( const QString fileName )
         }
     }
   root["KnownPublicKeys"] = knownPublicKeys;
+    */
 
   // `ba` contains JSON
   QByteArray ba = QJsonDocument(root).toJson();
@@ -129,11 +131,36 @@ bool UserData::writeFile ( const QString fileName )
   qDebug() << "rendered JSON:\n" ;
   qDebug() << ba;
   {
-    QFile fout("test.json");
+    QFile fout( fileName );
     fout.open(QIODevice::WriteOnly);
     fout.write(ba);
   }
   return true;
+}
+
+bool UserData::writeOwnPubKey ( const QString fileName )
+{
+    QJsonObject root;
+
+    root["UserName"] = m_user;
+    if ( m_OwnKeyPair == nullptr || m_OwnKeyPair->getPrintablePubKey() == "" )
+    {
+        return false;
+    }
+    root["PubKey"] = m_OwnKeyPair == nullptr ? QString ( "nullptr" ) : m_OwnKeyPair->getPrintablePubKey();
+
+    // `ba` contains JSON
+    QByteArray ba = QJsonDocument(root).toJson();
+
+    qDebug() << "rendered JSON:\n" ;
+    qDebug() << ba;
+    {
+        QFile fout( fileName );
+        fout.open(QIODevice::WriteOnly);
+        fout.write(ba);
+        fout.close();
+    }
+    return true;
 }
 
 void UserData::setOwnKeyPair ( EggeCrypt * ownKeyPair )

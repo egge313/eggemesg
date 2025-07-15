@@ -5,7 +5,9 @@
 #include <QTextStream>
 #include <QString>
 #include "debugprint.h"
+#include "contacts.h"
 #include <QFile>
+#include <QThread>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -14,6 +16,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     m_statusbarlabel = new QLabel("Starting");
+    m_contacts = new Contacts;
+
     ui->statusbar->addPermanentWidget(m_statusbarlabel);
     ui->statusbar->showMessage(
 			   "Welcome, your holiness! ",
@@ -85,10 +89,7 @@ void MainWindow::OnClickedLoginRegister()
        ui->statusbar->showMessage(
 				  "Password reject",
 			    3000);
-       // ud = m_pwdlg->getUserData();
-       // Q_ASSERT(NULL != ud);
-       // m_eggecrypt = new EggeCrypt(ud->m_user, ud->m_password);
-       // m_eggecrypt->initialize();
+       m_statusbarlabel->setText ( "Not logged in" );
        break;
     default: // error
        ui->statusbar->showMessage(
@@ -137,7 +138,7 @@ void MainWindow::OnClickedLogout()
 
 void MainWindow::OnShowMessage(const QString & msg)
 {
-  ui->textEditMessages->append(msg);
+  ui->textEditMyMessages->append(msg);
 }
 
 void MainWindow::OnClickedConnect()
@@ -154,9 +155,26 @@ void MainWindow::OnClickedConnect()
             m_statusbarlabel->setText ( "Connected" );
             egge::server::WebSocketServer * wss = m_connectdlg->getServer();
 
-            QString mymessage("");
-            if ( wss->getMessage ( mymessage, true ))
-                ui->textEditMyMessages->append ( mymessage );
+            if ( nullptr != wss )
+            {
+                QString mymessage("");
+                if ( wss->getMessage ( mymessage, true ))
+                    ui->textEditMyMessages->append ( mymessage );
+                connect ( wss, &egge::server::WebSocketServer::signalTextMessage, this, &MainWindow::OnShowMessage );
+           }
+
+            egge::client::WebSocketClient * wsClient = m_connectdlg->getClient();
+
+            if ( nullptr != wsClient )
+            {
+                // connect ( wss, SIGNAL ( egge::server::WebSocketServer::signalTextMessage ), this, SLOT ( OnShowMessage ));
+                QThread::sleep(3);
+                wsClient->send_text_message ( "2nd message" );
+                QThread::sleep(5);
+                wsClient->send_text_message ( "3rd message" );
+                QThread::sleep(11);
+                wsClient->send_text_message ( "4th message" );
+            }
         }
         break;
     case QDialog::Rejected:

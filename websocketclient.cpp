@@ -1,14 +1,12 @@
 #include "websocketclient.h"
 
-egge::client::WebSocketClient::WebSocketClient(const QUrl &url, QString& message):
+egge::client::WebSocketClient::WebSocketClient(const QUrl &url):
     m_socket(),
     m_proxy(QNetworkProxy::Socks5Proxy, "127.0.0.1", 9050)
 {
     // Set up Tor a SOCKS5 proxy.
 
     m_socket.setProxy(m_proxy);
-
-    m_message = message;
 
     connect(&m_socket, QOverload<QAbstractSocket::SocketError>::of(&QWebSocket::errorOccurred),
             this, &WebSocketClient::handle_socket_error);
@@ -26,6 +24,30 @@ egge::client::WebSocketClient::WebSocketClient(const QUrl &url, QString& message
     qDebug() << m_socket.state();
 }
 
+bool egge::client::WebSocketClient::send_text_message ( const QString & message )
+{
+
+            int sent = m_socket.sendTextMessage ( message );
+            if ( 0 != sent )
+                return true;
+            else
+                return false;
+
+
+}
+
+
+bool egge::client::WebSocketClient::send_binary_message ( const QByteArray & binary_message )
+{
+
+    int sent = m_socket.sendBinaryMessage ( binary_message );
+    if ( 0 != sent )
+        return true;
+    else
+        return false;
+
+}
+
 void egge::client::WebSocketClient::handle_socket_error()
 {
     qDebug() << "Error:" << m_socket.errorString();
@@ -36,7 +58,6 @@ void egge::client::WebSocketClient::handle_new_connection()
 {
     qDebug() << "New Connection";
 
-    m_socket.sendTextMessage(m_message);
     connect(&m_socket, &QWebSocket::textMessageReceived,
             this, &WebSocketClient::handle_new_text_message);
     connect(&m_socket, &QWebSocket::binaryMessageReceived,

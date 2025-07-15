@@ -22,6 +22,7 @@ public:
   QString getPassword() { return m_password; }
   void setOwnKeyPair ( EggeCrypt * ownKeyPair );
   EggeCrypt * getOwnKeyPair();
+  bool writeOwnPubKey ( QString filename );
 
   ~UserData () {}
 
@@ -32,6 +33,5 @@ private:
   QString m_scorchedearthpassword; // Ditto.
   bool    m_new;
   EggeCrypt * m_OwnKeyPair;
-  QList<gcry_sexp_t> m_KnownPublicKeys;
 };
 

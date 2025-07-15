@@ -2,15 +2,17 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QLabel>
+
 #include "userdata.h"
 #include "pwdialog.h"
 #include "eggecrypt.h"
 #include "cryptodialog.h"
 #include "connectdialog.h"
-#include "fortuneserver.h"
-#include "fortunethread.h"
 #include "version.h"
-#include <QLabel>
+#include "contacts.h"
+#include "websocketserver.h"
+#include "websocketclient.h"
 
 class ConnectDialog;
 
@@ -27,6 +29,7 @@ class MainWindow : public QMainWindow
     CryptoDialog *  m_cryptodlg = nullptr;
     EggeCrypt *     m_eggecrypt = nullptr;
     ConnectDialog * m_connectdlg = nullptr;
+    Contacts *      m_contacts = nullptr;
 
  public:
     explicit MainWindow(QWidget *parent = 0);
@@ -46,6 +49,8 @@ class MainWindow : public QMainWindow
     Ui::MainWindow *ui;
     QString eggemesg_version = EGGEMESG_VERSION;
     QLabel* m_statusbarlabel = nullptr;
+    egge::server::WebSocketServer * m_websocketserver = nullptr;
+
 };
 
 #endif // MAINWINDOW_H

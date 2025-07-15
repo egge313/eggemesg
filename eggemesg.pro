@@ -24,6 +24,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 
 SOURCES += \
+    contacts.cpp \
     main.cpp \
     pwdialog.cpp \
     eggecrypt.cpp \
@@ -31,8 +32,6 @@ SOURCES += \
     mainwindow.cpp \
     debugprint.cpp \
     cryptodialog.cpp \
-    fortuneserver.cpp \
-    fortunethread.cpp \
     curlpost.cpp \
     torprocess.cpp \
     userdata.cpp \
@@ -40,6 +39,7 @@ SOURCES += \
     websocketserver.cpp
 
 HEADERS += \
+    contacts.h \
     pwdialog.h \
     eggecrypt.h \
     connectdialog.h \
@@ -47,8 +47,6 @@ HEADERS += \
     userdata.h \
     debugprint.h \
     cryptodialog.h \
-    fortuneserver.h \
-    fortunethread.h \
     curlpost.h \
     version.h \
     torprocess.h \

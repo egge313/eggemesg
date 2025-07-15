@@ -22,7 +22,7 @@ void egge::server::WebSocketServer::handle_new_connection()
     qDebug() << "New Connection";
     QWebSocket *client = m_ws_server->nextPendingConnection();
 
-    connect(client, &QWebSocket::textMessageReceived, this, &WebSocketServer::handle_text_message);
+    connect(client, &QWebSocket::textMessageReceived, this, &WebSocketServer::handle_text_message, Qt::UniqueConnection);
     connect(client, &QWebSocket::binaryMessageReceived, this, &WebSocketServer::handle_binary_message);
     connect(client, &QWebSocket::disconnected, this, &WebSocketServer::handle_disconnect);
 
@@ -31,7 +31,7 @@ void egge::server::WebSocketServer::handle_new_connection()
 
 void egge::server::WebSocketServer::handle_close_connection()
 {
-    qDebug() << "Closed Connection";
+    qDebug() << "Connection closed ";
 }
 
 // Get one message. Return false if there are no messages. Delete message if requested.
@@ -48,12 +48,12 @@ bool egge::server::WebSocketServer::getMessage ( QString & message, bool deleteM
 void egge::server::WebSocketServer::handle_text_message( QString message )
 {
     QWebSocket *pClient = qobject_cast<QWebSocket *>(sender());
-    qDebug() << "Text message:" + message + " from " + pClient->peerName();
+    qDebug() << "handLe_text_message: Text message:" + message;
     m_messages.append ( message );
     emit signalTextMessage ( message );
 }
 
-void egge::server::WebSocketServer::handle_binary_message ( QByteArray binmessage )
+void egge::server::WebSocketServer::handle_binary_message (QByteArray binmessage )
 {
     qDebug() << "Binary message";
     emit signalBinaryMessage( binmessage );

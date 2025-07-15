@@ -106,12 +106,12 @@ egge::server::WebSocketServer * ConnectDialog::getServer()
     return m_EggemesgServer;
 }
 
-/*
-egge::client::WebSocketClient * ConnectDialog::getClient();
+
+egge::client::WebSocketClient * ConnectDialog::getClient()
 {
     return m_EggemesgClient;
 }
-*/
+
 
 void ConnectDialog::onPushButtonLaunchService ()
 {
@@ -126,16 +126,25 @@ void ConnectDialog::onPushButtonLaunchService ()
         return;
     }
 
+    // Check if we are online in the first place.
+    if ( isonline() )
+        ui->listWidgetTorControlHistory->addItem ( "Connected to the Internet." );
+    else
+    {
+        ui->listWidgetTorControlHistory->addItem ( "Not connected to the Internet." );
+        return;
+    }
+
     // Launch an eggemesg onion (Tor) service.
     m_EggemesgServer = new egge::server::WebSocketServer ( portnumber.toInt(), this );
     if ( m_EggemesgServer->isListening() )
     {
-        ui->listWidgetTorControlHistory->addItem ( "Eggemesg listening port " + portnumber + ".");
+        ui->listWidgetTorControlHistory->addItem ( "Eggemesg service listening to port " + portnumber + ".");
         // egge: does not work: m_mainwindow->showInfo ( "Eggemesg listening port " + portnumber + ".");
     }
     else
     {
-        ui->listWidgetTorControlHistory->addItem ( "Eggemesg started, not yet listening." );
+        ui->listWidgetTorControlHistory->addItem ( "Eggemesg service started, not yet listening." );
     }
 }
 
@@ -166,8 +175,8 @@ void ConnectDialog::onPushButtonTorClientConnect()
 
 
     // Try to open an eggemesg onion (Tor) service.
-    QString msg = "Initial connection attempt.";
-    m_EggemesgClient = new egge::client::WebSocketClient (QUrl("ws://g6katdgrmawavzqzrhgf5ysct6y6l5424zy27b3ncjqehdz664jop4yd.onion:8888"), msg );
+    // QString msg = "Initial connection attempt.";
+    m_EggemesgClient = new egge::client::WebSocketClient (QUrl("ws://g6katdgrmawavzqzrhgf5ysct6y6l5424zy27b3ncjqehdz664jop4yd.onion:8888"));
 
     ui->listWidgetTorControlHistory->addItem ( "Eggemesg attempting connection to  " + portnumber + ".");
 

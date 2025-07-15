@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>640</width>
-    <height>562</height>
+    <height>637</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,7 +19,7 @@
      <x>9</x>
      <y>9</y>
      <width>621</width>
-     <height>481</height>
+     <height>581</height>
     </rect>
    </property>
    <property name="frameShape">
@@ -52,7 +52,7 @@
      <rect>
       <x>10</x>
       <y>31</y>
-      <width>581</width>
+      <width>601</width>
       <height>192</height>
      </rect>
     </property>
@@ -74,8 +74,8 @@
      <rect>
       <x>10</x>
       <y>240</y>
-      <width>16</width>
-      <height>16</height>
+      <width>491</width>
+      <height>61</height>
      </rect>
     </property>
     <property name="frameShape">
@@ -91,7 +91,7 @@
    <widget class="QPushButton" name="generatePushButton">
     <property name="geometry">
      <rect>
-      <x>499</x>
+      <x>520</x>
       <y>240</y>
       <width>91</width>
       <height>31</height>
@@ -117,9 +117,9 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>411</y>
-      <width>581</width>
-      <height>51</height>
+      <y>441</y>
+      <width>601</width>
+      <height>121</height>
      </rect>
     </property>
    </widget>
@@ -128,21 +128,27 @@
      <rect>
       <x>10</x>
       <y>320</y>
-      <width>581</width>
-      <height>81</height>
+      <width>601</width>
+      <height>111</height>
      </rect>
     </property>
     <property name="title">
      <string>Import public key</string>
     </property>
+    <property name="alignment">
+     <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignTop</set>
+    </property>
     <widget class="QPushButton" name="pushButtonImport">
      <property name="geometry">
       <rect>
-       <x>490</x>
-       <y>30</y>
+       <x>510</x>
+       <y>70</y>
        <width>81</width>
        <height>31</height>
       </rect>
+     </property>
+     <property name="toolTip">
+      <string>Import someone's public key</string>
      </property>
      <property name="text">
       <string>Import</string>
@@ -152,19 +158,48 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>30</y>
-       <width>451</width>
+       <y>70</y>
+       <width>491</width>
        <height>31</height>
       </rect>
      </property>
     </widget>
+    <widget class="QLabel" name="labelFileName">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>40</y>
+       <width>261</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>File name:</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QPushButton" name="pushButtonSaveOwnPubKey">
+    <property name="geometry">
+     <rect>
+      <x>520</x>
+      <y>280</y>
+      <width>91</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string>Save your public key to a file to safely distribute it to someone</string>
+    </property>
+    <property name="text">
+     <string>Save</string>
+    </property>
    </widget>
   </widget>
   <widget class="QDialogButtonBox" name="cryptoButtonBox">
    <property name="geometry">
     <rect>
-     <x>450</x>
-     <y>530</y>
+     <x>460</x>
+     <y>600</y>
      <width>166</width>
      <height>24</height>
     </rect>
@@ -176,7 +211,7 @@
     <enum>Qt::Orientation::Horizontal</enum>
    </property>
    <property name="standardButtons">
-    <set>QDialogButtonBox::StandardButton::Cancel|QDialogButtonBox::StandardButton::Ok</set>
+    <set>QDialogButtonBox::StandardButton::Ignore|QDialogButtonBox::StandardButton::Ok</set>
    </property>
    <property name="centerButtons">
     <bool>false</bool>

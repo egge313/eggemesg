@@ -1,8 +1,6 @@
 #pragma once
 
 #include <QDialog>
-#include "fortuneserver.h"
-#include "fortunethread.h"
 #include "mainwindow.h"
 #include <QTcpSocket>
 #include <QDataStream>
@@ -27,7 +25,7 @@ class ConnectDialog : public QDialog
                             QMainWindow * mainwindow = nullptr );
     ~ConnectDialog();
     egge::server::WebSocketServer * getServer ();
-    // egge::client::WebSocketClient * getClient ();
+    egge::client::WebSocketClient * getClient ();
 
  public slots:
    void accept ();
@@ -48,7 +46,7 @@ class ConnectDialog : public QDialog
 
  private:
      Ui::ConnectDialog * ui;
-     egge::server::WebSocketServer * m_EggemesgServer;
-     egge::client::WebSocketClient * m_EggemesgClient;
+     egge::server::WebSocketServer * m_EggemesgServer = nullptr;
+     egge::client::WebSocketClient * m_EggemesgClient = nullptr;
 
 };

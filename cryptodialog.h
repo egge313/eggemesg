@@ -1,5 +1,4 @@
-#ifndef CRYPTODIALOG_H
-#define CRYPTODIALOG_H
+#pragma once
 
 #include "userdata.h"
 #include <QDialog>
@@ -20,6 +19,8 @@ class CryptoDialog : public QDialog
  private slots:
     void onGeneratePushButtonClicked ();
     void onSelectionChanged();
+    void onPushButtonSaveOwnPubKeyClicked();
+    void onPushButtonImport();
 
  private:
     Ui::CryptoDialog *ui;
@@ -27,4 +28,3 @@ class CryptoDialog : public QDialog
 
 };
 
-#endif // CRYPTODIALOG_H
