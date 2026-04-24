@@ -1,3 +1,5 @@
+// UserData -- Current user's relevant information.
+
 #pragma once
 
 #include <QString>
@@ -27,11 +29,11 @@ public:
   ~UserData () {}
 
 private:
-  QString m_user;
-  QString m_password; // Passwords should be stored as hashes, even in main
+  QString     m_user;
+  QString     m_password; // Passwords should be stored as hashes, even in main
                       // memory. So this is wrong. Awfully wrong.
-  QString m_scorchedearthpassword; // Ditto.
-  bool    m_new;
+  QString     m_scorchedearthpassword; // Ditto.
+  bool        m_new;
   EggeCrypt * m_OwnKeyPair;
 };
 

@@ -2,12 +2,15 @@
 #include "ui_pwdialog.h"
 #include "userdata.h"
 #include <QMessageBox>
+#include "sodium.h"
+#include "pwhash.h"
 
 PwDialog::PwDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::PwDialog)
 {
     ui->setupUi(this);
+    ui->tabScorchedEarth->setEnabled ( false );
 }
 
 void PwDialog::accept ()
@@ -18,10 +21,20 @@ void PwDialog::accept ()
       if (ui->lineEditUser1->text().length() > 0 &&
           ui->lineEditPw1->text().length() > 0)
         {
-          m_userdata = new UserData(ui->lineEditUser1->text(),
-                                  ui->lineEditPw1->text(),
-                                    "",
-                                  false);
+          PwHash pwhash;
+          pwhash.readFile();
+          if ( !pwhash.verify ( ui->lineEditPw1->text(),
+                             ui->lineEditUser1->text() ))
+          {
+              QMessageBox::warning(this, "Illegal user name or password",
+                                   "Verification failure"
+                                   );
+              return;
+          }
+          m_userdata = new UserData ( ui->lineEditUser1->text(),
+                                      ui->lineEditPw1->text(),
+                                      "",
+                                      false );
           QDialog::accept();
         }
       else
@@ -44,6 +57,15 @@ void PwDialog::accept ()
                                    "Need to repeat the same password!");
               return;
             }
+          PwHash pwhash;
+          if ( !pwhash.createHash ( ui->lineEditPw2->text(), ui->lineEditUser2->text() ))
+          {
+              QMessageBox::warning(this, "Password hash not created",
+                                   "(Probably out of memory)");
+              return;
+          }
+          pwhash.writeFile();
+
           m_userdata = new UserData(ui->lineEditUser2->text(),
                                   ui->lineEditPw2->text(),
                                     "",

@@ -100,7 +100,7 @@
          <x>10</x>
          <y>177</y>
          <width>771</width>
-         <height>301</height>
+         <height>411</height>
         </rect>
        </property>
        <widget class="QTextEdit" name="textEditMyMessages">
@@ -113,41 +113,41 @@
          </rect>
         </property>
        </widget>
-      </widget>
-      <widget class="QPushButton" name="Send">
-       <property name="geometry">
-        <rect>
-         <x>650</x>
-         <y>550</y>
-         <width>125</width>
-         <height>30</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Send</string>
-       </property>
-      </widget>
-      <widget class="QTextEdit" name="textEditMessages">
-       <property name="geometry">
-        <rect>
-         <x>30</x>
-         <y>490</y>
-         <width>461</width>
-         <height>82</height>
-        </rect>
-       </property>
-       <property name="minimumSize">
-        <size>
-         <width>256</width>
-         <height>82</height>
-        </size>
-       </property>
-       <property name="horizontalScrollBarPolicy">
-        <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOff</enum>
-       </property>
-       <property name="sizeAdjustPolicy">
-        <enum>QAbstractScrollArea::SizeAdjustPolicy::AdjustToContents</enum>
-       </property>
+       <widget class="QTextEdit" name="textEditMessages">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>300</y>
+          <width>621</width>
+          <height>101</height>
+         </rect>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>256</width>
+          <height>82</height>
+         </size>
+        </property>
+        <property name="horizontalScrollBarPolicy">
+         <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOff</enum>
+        </property>
+        <property name="sizeAdjustPolicy">
+         <enum>QAbstractScrollArea::SizeAdjustPolicy::AdjustToContents</enum>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="pushButtonSend">
+        <property name="geometry">
+         <rect>
+          <x>640</x>
+          <y>300</y>
+          <width>121</width>
+          <height>30</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Send</string>
+        </property>
+       </widget>
       </widget>
       <widget class="QPushButton" name="pushButtonLogin">
        <property name="geometry">

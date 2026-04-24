@@ -1,4 +1,4 @@
-// Egge Messenger: Basic cryptography
+// Egge's Messenger: Basic cryptography
 //
 // Copyright (C) 2018 Esa Kettunen
 //
@@ -81,12 +81,67 @@ void * EggeCrypt::data_from_hex (const char *string, size_t *r_length)
 }
 
 
-QString EggeCrypt::getPrintablePubKey()
+bool EggeCrypt::getPrintablePubKey( QString & pubkey )
 {
   char buf[8*BIGENUF];
-  size_t size = gcry_sexp_sprint ( *m_pubk_ptr, GCRYSEXP_FMT_ADVANCED, NULL, 0 );
+  if ( nullptr == m_pubk_ptr )
+  {
+      pubkey = "";
+      return false;
+  }
+  size_t size = gcry_sexp_sprint ( *m_pubk_ptr, GCRYSEXP_FMT_ADVANCED,
+				   NULL, 0 );
   gcry_sexp_sprint ( *m_pubk_ptr, GCRYSEXP_FMT_ADVANCED, buf, size );
-  return QString(buf);
+  pubkey = buf;
+  return true;
+}
+
+// Encode S-expression to QByteArray
+static QByteArray sexpToQByteArray(gcry_sexp_t sexp)
+{
+    size_t bufLen = gcry_sexp_sprint(sexp, GCRYSEXP_FMT_CANON, NULL, 0);
+    QByteArray arr;
+    arr.resize(bufLen);
+    gcry_sexp_sprint(sexp, GCRYSEXP_FMT_CANON, arr.data(), bufLen);
+    return arr;
+}
+
+// Decode QByteArray to S-expression
+static gcry_sexp_t qbyteArrayToSexp(const QByteArray &arr) {
+    gcry_sexp_t sexp = nullptr;
+    gcry_error_t err = gcry_sexp_new(&sexp, arr.constData(), arr.size(), 0);
+    if (err)
+    {
+        // xerr ( "Error parsing S-expression" );
+        return nullptr;
+    }
+    return sexp;
+}
+
+// Convert the public key to a QString encoded in base64.
+bool EggeCrypt::pubKeyToBase64 ( QString & pubkey64 )
+{
+  if ( nullptr == m_pubk_ptr )
+  {
+      pubkey64 = "";
+      return false;
+  }
+  QByteArray ba64 = sexpToQByteArray ( *m_pubk_ptr );
+  QString tmp2 ( ba64.toBase64() );
+  pubkey64 = tmp2;
+  return true;
+}
+
+// Convert a base64 encoded QString back to an EggeCrypt pubkey.
+bool EggeCrypt::base64ToPubKey ( const QString & pubkey64 )
+{
+  QString pk64 = pubkey64;
+  QByteArray ba64 = QByteArray::fromBase64 ( pk64.toUtf8() );
+  gcry_sexp_t ba64sexp = qbyteArrayToSexp ( ba64 );
+  if ( ba64sexp == nullptr )
+      return false;
+  m_pubk_ptr = &ba64sexp;
+  return true;
 }
 
 void EggeCrypt::show_sexp (const char *prefix, gcry_sexp_t a)
@@ -108,7 +163,9 @@ void EggeCrypt::show_sexp (const char *prefix, gcry_sexp_t a)
 
 bool EggeCrypt::initialize ()
 {
-  return readfile ();
+    if ( !readfile () )
+        return generatekeys ();
+    return true;
 }
   
 
@@ -238,8 +295,8 @@ bool EggeCrypt::encode (const unsigned char* clearmessage, gcry_sexp_t & cipher)
 
 // Encrypt message using any RSA public key.
 bool EggeCrypt::encode (const unsigned char* clearmessage,
-            const gcry_sexp_t & pubk,
-			gcry_sexp_t & cipher)
+                       const QString & pubk,
+                       gcry_sexp_t & cipher)
 {
   /* Create a message. */
   gcry_mpi_t msg;
@@ -275,7 +332,7 @@ bool EggeCrypt::encode (const unsigned char* clearmessage,
   
   /* Encrypt the message. */
   
-  err = gcry_pk_encrypt ( &cipher, data, pubk );
+  err = gcry_pk_encrypt ( &cipher, data, (gcry_sexp_t) pubk.data() );
   if (err)
     {
       char tmp[BIGENUF];
@@ -286,106 +343,6 @@ bool EggeCrypt::encode (const unsigned char* clearmessage,
   return true;
 }
 
-
-   /* Extract result of RSA operation (i.e. the actual encrypted data)
-       from ciph.
-    */
-
-bool EggeCrypt::decode (const gcry_sexp_t & ciph,
-                        QString & clearmessage)
-{
-    gcry_sexp_t l1;
-    const void *a;
-    size_t alen;
-
-    l1 = gcry_sexp_find_token (ciph, "a", 0);
-    a = gcry_sexp_nth_data (l1, 1, &alen);
-    if (!a)
-      {
-	xerr ("parameter 'a' missing in key\n");
-	return false;
-      }
-
-
-    /* Decrypt the message. */
-    gcry_sexp_t plain;
-    gcry_sexp_t ciph2; /* egge */
-    gcry_error_t err;
-
-    err = gcry_sexp_build (&ciph2, NULL,
-			   "(enc-val (flags oaep)"
-			   "(rsa (a %b)))",
-			   alen, a);
-
-#ifdef EGGECRYPTTEST
-
-      show_sexp ("ciph2 -- \n", ciph2);
-
-#endif
-
-    if (err) {
-    char tmp[BIGENUF];
-    gpg_strerror_r(err, tmp, BIGENUF);
-
-        xerr("gcrypt: building decryption context failed");
-	return false;
-    }
-
-    err = gcry_pk_decrypt(&plain, ciph2, *m_privk_ptr);
-    if (err) {
-    char tmp[BIGENUF];
-    gpg_strerror_r(err, tmp, BIGENUF);
-
-        xerr("gcrypt: decryption failed");
-	return false;
-    }
-
-#ifdef EGGECRYPTTEST    
-
-      show_sexp ("plain -- \n", plain);
-
-#endif
-
-    /* Pretty-print the results. */
-    gcry_mpi_t out_msg = gcry_sexp_nth_mpi(plain, 1, GCRYMPI_FMT_USG);
-    //    printf("Original:\n");
-    // gcry_mpi_dump(msg);
-    // printf("\n" "Decrypted:\n");
-    // gcry_mpi_dump(out_msg);
-    // printf("\n");
-
-    // gcry_mpi_t msg;
-    // 
-    //
-    // if (gcry_mpi_cmp(msg, out_msg)) {
-    //    xerr("data corruption!");
-    //	return false;
-    // } 
-    //    printf("Messages match.\n");
-
-    unsigned char obuf[64] = { 0 };
-    err = gcry_mpi_print(GCRYMPI_FMT_USG, (unsigned char*) &obuf, 
-                         sizeof(obuf), NULL, out_msg);
-    if (err) {
-        xerr("failed to stringify mpi");
-	return false;
-    }
-    // printf("-> %s\n", (char*) obuf);
-
-    clearmessage = QString((char *)obuf);
-
-    /* Release contexts. */
-    // gcry_mpi_release(msg);
-    gcry_mpi_release(out_msg);
-    gcry_sexp_release(ciph);
-    gcry_sexp_release(ciph2);
-    gcry_sexp_release(plain);
-    gcry_cipher_close( *m_aes_hd_ptr );
-
-    return true;
-}
-
-
 void EggeCrypt::gcrypt_init()
 {
     static bool been_here = false;
@@ -395,7 +352,7 @@ void EggeCrypt::gcrypt_init()
         return;
     }
     /* Version check should be the very first call because it
-       makes sure that important subsystems are intialized. */
+       makes sure that important subsystems are initialized. */
     if (!gcry_check_version (GCRYPT_VERSION))
     {
         xerr("gcrypt: library version mismatch");
@@ -412,7 +369,7 @@ void EggeCrypt::gcrypt_init()
        process might still be running with increased privileges and that
        the secure memory has not been intialized.  */
 
-    /* Allocate a pool of 16k secure memory.  This make the secure memory
+    /* Allocate a pool of 16k secure memory.  This makes the secure memory
        available and also drops privileges where needed.  */
     err |= gcry_control (GCRYCTL_INIT_SECMEM, 16384, 0);
 

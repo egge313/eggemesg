@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui widgets network
+QT       += core gui widgets network websockets core-private
 
 TARGET = eggemesg
 TEMPLATE = app
@@ -33,6 +33,7 @@ SOURCES += \
     debugprint.cpp \
     cryptodialog.cpp \
     curlpost.cpp \
+    pwhash.cpp \
     torprocess.cpp \
     userdata.cpp \
     websocketclient.cpp \
@@ -44,6 +45,7 @@ HEADERS += \
     eggecrypt.h \
     connectdialog.h \
     mainwindow.h \
+    pwhash.h \
     userdata.h \
     debugprint.h \
     cryptodialog.h \
@@ -59,10 +61,10 @@ FORMS += \
     mainwindow.ui \
     cryptodialog.ui
 
-unix:!macx: LIBS += -L/usr/local/lib/ -L/usr/lib/x86_64-linux-gnu -lgcrypt \
+unix:!macx: LIBS += -L/opt/Qt/6.9.3/gcc_64/lib -L/usr/local/lib/ -L/usr/lib/x86_64-linux-gnu -lgcrypt \
                     -lgpg-error
 unix:!macx: LIBS += -L/usr/local/lib/ -lcurl
-unix:!macx: LIBS += -L/usr/lib/ -L/usr/local/lib -lQt6WebSockets
+unix:!macx: LIBS += -L/usr/lib/ -L/usr/local/lib -lQt6WebSockets -lsodium
 
 
 INCLUDEPATH += /usr/local/include

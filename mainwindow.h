@@ -25,14 +25,14 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
  public:
-    PwDialog *      m_pwdlg = nullptr;
-    CryptoDialog *  m_cryptodlg = nullptr;
-    EggeCrypt *     m_eggecrypt = nullptr;
-    ConnectDialog * m_connectdlg = nullptr;
-    Contacts *      m_contacts = nullptr;
+    PwDialog*       m_pwdlg = nullptr;
+    CryptoDialog*   m_cryptodlg = nullptr;
+    EggeCrypt*      m_eggecrypt = nullptr;
+    ConnectDialog*  m_connectdlg = nullptr;
+    Contacts*       m_contacts = nullptr;
 
  public:
-    explicit MainWindow(QWidget *parent = 0);
+    explicit MainWindow( QWidget* parent = 0 );
     void showInfo ( QString infoMessage );
     void showMessage ( QString message );
     ~MainWindow();
@@ -42,11 +42,12 @@ class MainWindow : public QMainWindow
     void OnClickedConnect();
     void OnClickedSetKeys();
     void OnClickedLogout();
-    void OnShowMessage(const QString & msg);
+    void OnShowMessage ( const QString & msg );
+    void OnClickedSend();
 
  private:
-    void setStyleSheet(QString & sheetName);
-    Ui::MainWindow *ui;
+    void setStyleSheet ( QString & sheetName );
+    Ui::MainWindow* ui;
     QString eggemesg_version = EGGEMESG_VERSION;
     QLabel* m_statusbarlabel = nullptr;
     egge::server::WebSocketServer * m_websocketserver = nullptr;

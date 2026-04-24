@@ -13,16 +13,16 @@ class PwDialog : public QDialog
     Q_OBJECT
 
  public:
-    UserData * m_userdata = NULL;
+    UserData * m_userdata = nullptr;
 
  public:
-    explicit PwDialog(QWidget *parent = 0);
+    explicit PwDialog ( QWidget* parent = 0 );
     UserData * getUserData () { return m_userdata; }
     ~PwDialog();
     
  public slots:
-      void accept ();
-      void reject ();
+    void accept ();
+    void reject ();
 
  private:
     Ui::PwDialog *ui;

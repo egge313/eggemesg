@@ -13,13 +13,26 @@ CryptoDialog::CryptoDialog(QWidget * parent, UserData * userdata) :
 
 {
   ui->setupUi(this);
-    ui->cryptoListWidget->addItem("(Frankly, need to list known public keys here soon!)");
+  ui->cryptoListWidget->addItem("(Frankly, need to list known public keys here soon!)");
   ui->cryptoListWidget->addItem("RSA 1024 bit -- not really safe");
   ui->cryptoListWidget->addItem("RSA 2048 bit -- relatively safe");
   ui->cryptoListWidget->addItem("RSA 3072 bit -- safe");
   ui->cryptoListWidget->addItem("RSA 4096 bit -- safe,"
                                 " computationally expensive");  
   ui->generatePushButton->setDisabled(true);
+
+  // Initialise own keys.
+  EggeCrypt * ecrypt = new EggeCrypt(m_userdata->getUser(),
+                                    m_userdata->getPassword());
+
+  ui->generateLabel->setText(tr("Loading own keypair."));
+  ecrypt->initialize();
+  // debugprint(ecrypt->getPrintablePubKey().toUtf8().to);
+  QString pubkey = "";
+  ecrypt->getPrintablePubKey ( pubkey );
+  ui->keyTextBrowser->setText ( pubkey );
+  m_userdata->setOwnKeyPair ( ecrypt->getKeyPair() );
+
   connect(ui->cryptoListWidget, SIGNAL(itemSelectionChanged()), this,
 	  SLOT(onSelectionChanged()));
   connect(ui->generatePushButton, SIGNAL(clicked()), this,
@@ -58,7 +71,9 @@ void CryptoDialog::onGeneratePushButtonClicked ()
   ui->generateLabel->setText(tr("Generating RSA keys... SUCCESS!"));
   ecrypt->initialize();
   // debugprint(ecrypt->getPrintablePubKey().toUtf8().to);
-  ui->keyTextBrowser->setText(ecrypt->getPrintablePubKey());
+  QString pubkey = "";
+  ecrypt->pubKeyToBase64 ( pubkey );
+  ui->keyTextBrowser->setText ( pubkey );
   m_userdata->setOwnKeyPair ( ecrypt->getKeyPair() );
   m_userdata->writeFile( "eggemesg.json" );
 }

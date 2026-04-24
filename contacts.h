@@ -7,7 +7,6 @@
 class Contacts
 {
 
-
 private:
   struct ContactEle
   {

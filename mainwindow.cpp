@@ -32,6 +32,8 @@ MainWindow::MainWindow(QWidget *parent) :
 	    SLOT(OnClickedSetKeys()));
     connect(ui->pushButtonLogout, SIGNAL(clicked()), this,
 	    SLOT(OnClickedLogout()));
+    connect(ui->pushButtonSend, SIGNAL(clicked()), this,
+            SLOT(OnClickedSend()));
 
 
     ui->pushButtonConnect->setDisabled(true);
@@ -48,6 +50,57 @@ MainWindow::MainWindow(QWidget *parent) :
     setWindowIcon(windowicon);
 }
 
+void MainWindow::OnClickedSend()
+{
+    QString myMessage = ui->textEditMessages->toPlainText();
+    if ( myMessage == "" )
+    {
+        ui->statusbar->showMessage ( "No message to send", 3000 );
+        return;
+    }
+    if ( m_contacts == nullptr )
+    {
+        ui->statusbar->showMessage ( "No known contacts", 3000 );
+        return;
+    }
+
+    QString pubkey;
+    QString dummyAddress;
+
+    if ( !m_contacts->findByName ( "qwe", pubkey, dummyAddress ) )
+    {
+        ui->statusbar->showMessage ( "No known contacts", 3000 );
+        return;
+    }
+
+    gcry_sexp_t myCipher;
+    // Encrypt message using an RSA public key.
+    /* m_eggecrypt->encode (myMessage.data(),
+                          pubk, // egge: we need to obtain pubk somehow
+                        gcry_sexp_t & myCipher);
+    */
+    egge::client::WebSocketClient * wsClient = m_connectdlg->getClient();
+    if ( nullptr == wsClient )
+    {
+        ui->statusbar->showMessage ( "No active connection", 3000 );
+        return;
+    }
+
+    if ( ! wsClient->send_text_message ( myMessage ))
+    {
+        ui->statusbar->showMessage ( "Failed to send a message", 3000 );
+        return;
+    }
+    if ( ! wsClient->send_text_message ( (char *)myCipher))
+    {
+        ui->statusbar->showMessage ( "Failed to send an encoded message", 3000 );
+        return;
+    }
+
+
+    QString user = m_pwdlg->getUserData()->getUser();
+    ui->textEditMyMessages->append ( user + ": " + myMessage );
+}
 
 void MainWindow::OnClickedLoginRegister()
 {
@@ -159,24 +212,20 @@ void MainWindow::OnClickedConnect()
             {
                 QString mymessage("");
                 if ( wss->getMessage ( mymessage, true ))
-                    ui->textEditMyMessages->append ( mymessage );
+                     ui->textEditMyMessages->append ( mymessage );
                 connect ( wss, &egge::server::WebSocketServer::signalTextMessage, this, &MainWindow::OnShowMessage );
-           }
+            }
 
             egge::client::WebSocketClient * wsClient = m_connectdlg->getClient();
 
             if ( nullptr != wsClient )
             {
-                // connect ( wss, SIGNAL ( egge::server::WebSocketServer::signalTextMessage ), this, SLOT ( OnShowMessage ));
-                QThread::sleep(3);
-                wsClient->send_text_message ( "2nd message" );
-                QThread::sleep(5);
-                wsClient->send_text_message ( "3rd message" );
-                QThread::sleep(11);
-                wsClient->send_text_message ( "4th message" );
+
             }
+
+            break;
         }
-        break;
+
     case QDialog::Rejected:
         m_statusbarlabel->setText ( "Local" );
         break;

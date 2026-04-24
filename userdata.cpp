@@ -13,7 +13,7 @@
 
 bool UserData::readFile ( const QString fileName )
 {
-    // 2. Now read it back in
+   // 2. Now read it back in
     QJsonParseError parseError;
     QJsonDocument doc2;
     {
@@ -26,7 +26,8 @@ bool UserData::readFile ( const QString fileName )
 
     if (parseError.error != QJsonParseError::NoError)
     {
-        qWarning() << "Parse error at" << parseError.offset << ":" << parseError.errorString();
+        qWarning() << "Parse error at" << parseError.offset << ":" 
+		   << parseError.errorString();
         return false;
     }
     else
@@ -143,11 +144,14 @@ bool UserData::writeOwnPubKey ( const QString fileName )
     QJsonObject root;
 
     root["UserName"] = m_user;
-    if ( m_OwnKeyPair == nullptr || m_OwnKeyPair->getPrintablePubKey() == "" )
+    QString pubkey = "";
+    m_OwnKeyPair->getPrintablePubKey( pubkey );
+    if ( m_OwnKeyPair == nullptr || pubkey == "" )
     {
         return false;
     }
-    root["PubKey"] = m_OwnKeyPair == nullptr ? QString ( "nullptr" ) : m_OwnKeyPair->getPrintablePubKey();
+
+    root["PubKey"] = m_OwnKeyPair == nullptr ? QString ( "nullptr" ) : pubkey;
 
     // `ba` contains JSON
     QByteArray ba = QJsonDocument(root).toJson();
@@ -173,54 +177,4 @@ EggeCrypt * UserData::getOwnKeyPair()
     return m_OwnKeyPair;
 }
 
-/*
-int main() {
-    // 1. Create the document
-    QJsonObject root;
-    root["FirstName"] = "John";
-    root["LastName"] = "Doe";
-    root["Age"] = 43;
 
-    // Construct nested object first, then store it in `root`
-    QJsonObject Address;
-    Address["Street"] =  "Downing Street 10";
-    Address["City"] =  "London";
-    Address["Country"] =  "Great Britain";
-    root["Address"] = Address;
-
-    QJsonArray PhoneNumbers;
-    PhoneNumbers.push_back("+44 1234567");
-    PhoneNumbers.push_back("+44 2345678");
-    root["Phone Numbers"] = PhoneNumbers;
-
-    // `ba` contains JSON
-    QByteArray ba = QJsonDocument(root).toJson();
-    QTextStream ts(stdout);
-    ts << "rendered JSON" << endl;
-    ts << ba;
-    {
-        QFile fout("test.json");
-        fout.open(QIODevice::WriteOnly);
-        fout.write(ba);
-    }
-
-    // 2. Now read it back in
-    QJsonParseError parseError;
-    QJsonDocument doc2;
-    {
-        QFile fin("test.json");
-        fin.open(QIODevice::ReadOnly);
-        QByteArray ba2 = fin.readAll();
-        doc2 = QJsonDocument::fromJson(ba2, &parseError);
-    }
-
-    if (parseError.error != QJsonParseError::NoError) {
-        qWarning() << "Parse error at" << parseError.offset << ":" << parseError.errorString();
-    } else {
-        ts << "parsed JSON" << endl;
-        ts << doc2.toJson(QJsonDocument::Compact); 
-                     //or QJsonDocument::Indented for a JsonFormat
-    }
-}
-
-*/

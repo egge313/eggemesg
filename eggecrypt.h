@@ -1,3 +1,5 @@
+// EggeCrypt -- An RSA interface.
+
 #pragma once
 
 #include <QString>
@@ -20,6 +22,7 @@ class EggeCrypt {
       m_user = user;
       m_password = password;
     }
+
   bool initialize ();
 
   // Encrypt a message using your own public key.
@@ -29,6 +32,11 @@ class EggeCrypt {
   bool encode (const unsigned char* clearmessage, 
 	       const gcry_sexp_t & pubk, 
 	       gcry_sexp_t & ciph);
+
+  // Encrypt a message using some other public key.
+  bool encode (const unsigned char* clearmessage,
+              const QString & pubk,
+              gcry_sexp_t & ciph);
 
   // Decrypt a message using your own keypair.
   bool decode (const gcry_sexp_t & ciph, QString & clearmessage);
@@ -46,7 +54,13 @@ class EggeCrypt {
   EggeCrypt * getKeyPair() { return this; }
 
   /* Get printable key */
-  QString getPrintablePubKey();
+  bool getPrintablePubKey ( QString & pubkey );
+
+  // Get pubkey into a form that can be part of a JSON file.
+  bool pubKeyToBase64 ( QString & pubkey64 );
+
+  // Get the JSON form of pubkey back to a pubkey.
+  bool base64ToPubKey ( const QString & pubkey64 );
 
   ~EggeCrypt ();
 
