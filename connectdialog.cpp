@@ -19,7 +19,8 @@ ConnectDialog::ConnectDialog(QWidget *parent,
 {
     ui->setupUi(this);
 
-    // The form editor refuses to get rid of old tabs, so the lazy programmer has to do it programmatically.
+    // The form editor refuses to get rid of old tabs, so the lazy programmer 
+    // has to do it programmatically.
     delete ui->tabClient;
     delete ui->tabServer;
 
@@ -184,28 +185,31 @@ void ConnectDialog::onPushButtonTorClientConnect()
 
 void ConnectDialog::onPushButtonTorClientDisconnect()
 {
-    ui->listWidgetTorControlHistory->addItem ( "DISCONNECT not yet implemented." );
+    ui->listWidgetTorControlHistory
+       ->addItem ( "DISCONNECT not yet implemented." );
     return;
 }
 
 bool ConnectDialog::isonline ()
 {
-        if ( QNetworkInformation::loadDefaultBackend() && QNetworkInformation::loadBackendByFeatures( QNetworkInformation::Feature::Reachability ) )
-        {
-            QNetworkInformation* net_info = QNetworkInformation::instance();
-            if ( nullptr != net_info ) {
-                if(net_info->reachability() == QNetworkInformation::Reachability::Online) {
-                    return true;
-                }
-                else {
-                    return false;
-                }
-            }
-            else
-                return false;
-        }
-        else
-            return false;
+   if ( QNetworkInformation::loadDefaultBackend() &&
+	QNetworkInformation::loadBackendByFeatures(
+			       QNetworkInformation::Feature::Reachability ) )
+      {
+	 QNetworkInformation* net_info = QNetworkInformation::instance();
+	 if ( nullptr != net_info ) {
+	    if(net_info->reachability() == QNetworkInformation::Reachability::Online) {
+	       return true;
+	    }
+	    else {
+	       return false;
+	    }
+	 }
+	 else
+	    return false;
+      }
+   else
+      return false;
 }
 
 void ConnectDialog::accept ()

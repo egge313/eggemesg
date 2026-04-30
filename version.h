@@ -1,6 +1,6 @@
 #ifndef VERSION_H
 #define VERSION_H 1
 
-#define EGGEMESG_VERSION "0.1.1"
+#define EGGEMESG_VERSION "0.1.3"
 
 #endif

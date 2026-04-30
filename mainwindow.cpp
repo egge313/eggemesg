@@ -148,6 +148,7 @@ void MainWindow::OnClickedLoginRegister()
        ui->statusbar->showMessage(
 				  "Password error",
 			    3000);
+       m_statusbarlabel->setText ( "Password error" );
     }
 }
 

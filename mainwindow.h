@@ -32,7 +32,7 @@ class MainWindow : public QMainWindow
     Contacts*       m_contacts = nullptr;
 
  public:
-    explicit MainWindow( QWidget* parent = 0 );
+    explicit MainWindow ( QWidget* parent = 0 );
     void showInfo ( QString infoMessage );
     void showMessage ( QString message );
     ~MainWindow();

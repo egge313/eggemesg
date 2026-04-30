@@ -1,0 +1,77 @@
+Quick summary of what I'll do: I’ll explain what “AnonymityMode” (the Tor option people mean by “hidden‑service anonymity mode”) is, how it affects onion services, and then show practical control‑port examples (raw ControlPort commands) to enable it at runtime and to create an onion service. If you want persistent changes I’ll show the torrc equivalent and the difference between persistent and ephemeral onion services.
+
+What “hidden service anonymity mode” means
+- Commonly people mean the Tor configuration option named AnonymityMode. It’s a convenience setting that turns on a carefully chosen set of privacy‑preserving defaults in the Tor process (tightened defaults, reduced fingerprinting surface, and stricter behavior). It is not a separate network protocol for hidden services — it just changes Tor client behavior to be more conservative about metadata leaks.
+- Separately, onion (hidden) services themselves provide anonymity for the service and the client if used correctly; using v3 (ED25519‑V3) services is strongly recommended for current privacy and security.
+
+Notes:
+- Enabling AnonymityMode changes the running Tor configuration for that process; it does not necessarily edit your torrc file on disk (unless you edit torrc).
+- AnonymityMode has system‑wide effects (not only on hidden services) and may break some features (less compatibility, some services might not work the same).
+- For onion services, modern practice is to create v3 services (ED25519‑V3) and, if you don’t want to store keys on disk, create ephemeral services via the ControlPort.
+
+How to enable AnonymityMode from the ControlPort (runtime)
+1) Make sure Tor’s ControlPort is enabled and you can authenticate (cookie or password / HashedControlPassword). Typical control port: 9051 or configured otherwise.
+
+2) Example raw control session (using netcat / telnet to 127.0.0.1:9051). Replace "mypassword" with your control password or use cookie auth as configured:
+
+Connect:
+$ nc 127.0.0.1 9051
+AUTHENTICATE "mypassword"
+250 OK
+
+Enable AnonymityMode at runtime:
+SETCONF AnonymityMode=1
+250 OK
+
+You can verify:
+GETCONF AnonymityMode
+250-AnonymityMode=1
+250 OK
+
+What this does: it sets that configuration option in the running Tor process. To make it permanent, add AnonymityMode 1 to torrc.
+
+How to create an onion service from the ControlPort
+There are two approaches:
+
+A — Persistent onion service (in torrc)
+Add to torrc:
+HiddenServiceDir /var/lib/tor/my_service/
+HiddenServicePort 80 127.0.0.1:8080
+HiddenServiceVersion 3
+
+Then restart Tor. Tor will create the service keys under HiddenServiceDir and publish the v3 address.
+
+B — Ephemeral onion service via the ControlPort (recommended for short‑lived services)
+Use the ADD_ONION control command to create a v3 (ED25519) ephemeral service:
+
+Example raw control commands after AUTHENTICATE:
+
+# Create a new ephemeral v3 (ED25519) onion that forwards virtual port 80 to 127.0.0.1:8080
+ADD_ONION NEW:ED25519-V3 Port=80,127.0.0.1:8080
+250-ServiceID=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.onion
+250-PrivateKey=ED25519-V3:AAAAA...
+250 OK
+
+Notes:
+- The returned ServiceID is the .onion address.
+- The returned PrivateKey is the private key for the service (omit/discard it if you do not want to save keys).
+- If you don’t want Tor to return the private key in the response, use the DiscardPK flag:
+  ADD_ONION NEW:ED25519-V3 Flags=DiscardPK Port=80,127.0.0.1:8080
+  Tor will then return only the ServiceID and not the private key.
+- For pure ephemeral services that disappear on Tor shutdown, use NEW:ED25519-V3 (no HiddenServiceDir). If you want persistence, create the HiddenServiceDir in torrc instead.
+
+Authentication for clients
+- If you require client authorization (only permitted clients can connect), you can use HiddenServiceAuthorizeClient in torrc or the equivalent control operations that manage client auth keys. That’s orthogonal to AnonymityMode.
+
+Practical tips and safety
+- Always prefer ED25519‑V3 (v3 onion services). v2 is obsolete.
+- Use CookieAuthentication or a properly hashed control password on the ControlPort; don’t leave ControlPort wide open.
+- AnonymityMode may break some non‑privacy features (e.g., some protocol helpers). Test after enabling.
+- For long‑lived services where you want a stable onion address, use torrc HiddenServiceDir. For ephemeral short‑lived services or programmatic creation, use ADD_ONION.
+
+If you want, I can:
+- give a full example torrc that enables AnonymityMode and a persistent v3 service;
+- show a short Python example using the Stem library to SETCONF and create an ephemeral onion service; or
+- walk through enabling CookieAuthentication / HashedControlPassword and a complete control‑port session step‑by‑step.
+
+Which of those would you like next?
