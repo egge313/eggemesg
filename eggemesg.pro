@@ -4,12 +4,12 @@
 #
 #-------------------------------------------------
 
-QT       += core gui widgets network websockets core-private
+QT       += core core-private gui widgets network websockets
 
 TARGET = eggemesg
 TEMPLATE = app
 
-CONFIG += c++20
+CONFIG += c++17
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which has been marked as deprecated (the exact warnings
@@ -24,6 +24,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 
 SOURCES += \
+    connectionlistdialog.cpp \
     contacts.cpp \
     main.cpp \
     pwdialog.cpp \
@@ -34,18 +35,21 @@ SOURCES += \
     cryptodialog.cpp \
     curlpost.cpp \
     pwhash.cpp \
+    tabdialog.cpp \
     torprocess.cpp \
     userdata.cpp \
     websocketclient.cpp \
     websocketserver.cpp
 
 HEADERS += \
+    connectionlistdialog.h \
     contacts.h \
     pwdialog.h \
     eggecrypt.h \
     connectdialog.h \
     mainwindow.h \
     pwhash.h \
+    tabdialog.h \
     userdata.h \
     debugprint.h \
     cryptodialog.h \

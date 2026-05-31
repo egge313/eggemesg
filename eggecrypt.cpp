@@ -2,7 +2,7 @@
 //
 // Copyright (C) 2018 Esa Kettunen
 //
-// Chat program using public key encryption to guarantee secrecy.
+// RSA based public key encryption.
 //
 // SUGARING: 
 //   (1) Employing OAEP padding to avoid short messages such as 
@@ -245,6 +245,59 @@ bool EggeCrypt::readfile ()
     fclose(lockf);
 
     return true;
+}
+
+// Convert a key pair represented as an S-expression string back to its
+// EggeCrypt representation.
+//
+bool EggeCrypt::convertFromString ( const QString keyPair )
+{
+   void* rsa_buf;
+   size_t rsa_len;
+   gcry_error_t err;
+
+   QByteArray byteArray = keyPair.toUtf8();
+   const char* cstr = byteArray.constData();
+   rsa_buf = (void*) cstr;
+   rsa_len = (size_t) strlen ( cstr );
+
+   // Load the key pair components into sexps.
+   if ( nullptr == m_rsa_keypair_ptr )
+      {
+	 m_rsa_keypair_ptr = new gcry_sexp_t;
+      }
+   err = gcry_sexp_new( m_rsa_keypair_ptr, rsa_buf, rsa_len, 0);
+   if (err)
+      {
+	 xerr("gcrypt: failed to extract key pair");
+	 return false;
+      }
+
+   // Public key.
+   if ( nullptr == m_pubk_ptr )
+      {
+	 m_pubk_ptr = new gcry_sexp_t;
+      }
+   *m_pubk_ptr = gcry_sexp_find_token( *m_rsa_keypair_ptr, "public-key", 0);
+
+   // Private key.
+   if ( nullptr == m_privk_ptr )
+      {
+	 m_privk_ptr = new gcry_sexp_t;
+      }
+   *m_privk_ptr = gcry_sexp_find_token( *m_rsa_keypair_ptr, "private-key", 0);
+
+   // Check sanity of private key.
+   err = gcry_pk_testkey ( *m_privk_ptr );
+   if (err)
+      {
+	 xerr ( "gcrypt: Private key not sane.");
+	 return false;
+      }
+
+   free(rsa_buf);
+
+   return true;
 }
 
 bool EggeCrypt::encode (const unsigned char* clearmessage, gcry_sexp_t & cipher)

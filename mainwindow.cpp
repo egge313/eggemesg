@@ -8,6 +8,8 @@
 #include "contacts.h"
 #include <QFile>
 #include <QThread>
+#include "tabdialog.h"
+#include "connectionlistdialog.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -34,6 +36,10 @@ MainWindow::MainWindow(QWidget *parent) :
 	    SLOT(OnClickedLogout()));
     connect(ui->pushButtonSend, SIGNAL(clicked()), this,
             SLOT(OnClickedSend()));
+    connect(ui->pushButtonTabs, SIGNAL(clicked()), this,
+            SLOT(OnClickedTabs()));
+    connect(ui->pushButtonConnectionList, SIGNAL(clicked()), this,
+            SLOT(OnClickedConnectionList()));
 
 
     ui->pushButtonConnect->setDisabled(true);
@@ -73,17 +79,16 @@ void MainWindow::OnClickedSend()
         return;
     }
 
-    gcry_sexp_t myCipher;
-    // Encrypt message using an RSA public key.
-    /* m_eggecrypt->encode (myMessage.data(),
-                          pubk, // egge: we need to obtain pubk somehow
-                        gcry_sexp_t & myCipher);
-    */
+
     egge::client::WebSocketClient * wsClient = m_connectdlg->getClient();
     if ( nullptr == wsClient )
     {
         ui->statusbar->showMessage ( "No active connection", 3000 );
         return;
+    }
+    else
+    {
+        ui->statusbar->showMessage ( "Connection created", 3000 );
     }
 
     if ( ! wsClient->send_text_message ( myMessage ))
@@ -91,6 +96,18 @@ void MainWindow::OnClickedSend()
         ui->statusbar->showMessage ( "Failed to send a message", 3000 );
         return;
     }
+    else
+    {
+        ui->statusbar->showMessage ( "Message sent", 3000 );
+    }
+
+    gcry_sexp_t myCipher;
+    // Encrypt message using an RSA public key.
+    /* m_eggecrypt->encode (myMessage.data(),
+                          pubk, // egge: we need to obtain pubk somehow
+                        gcry_sexp_t & myCipher);
+    */
+    // This call will fail until myCipher is good. (See comment above.)
     if ( ! wsClient->send_text_message ( (char *)myCipher))
     {
         ui->statusbar->showMessage ( "Failed to send an encoded message", 3000 );
@@ -101,6 +118,43 @@ void MainWindow::OnClickedSend()
     QString user = m_pwdlg->getUserData()->getUser();
     ui->textEditMyMessages->append ( user + ": " + myMessage );
 }
+
+void MainWindow::OnClickedTabs()
+{
+    QString fileName = ".";
+    TabDialog tabdialog(fileName);
+    switch ( tabdialog.exec() )
+    {
+    case QDialog::Accepted:
+        ui->statusbar->showMessage ( "Tabs dialog accepted", 3000 );
+        return;
+    case QDialog::Rejected:
+        ui->statusbar->showMessage ( "Tabs dialog cancelled", 3000 );
+        return;
+    default:
+        ui->statusbar->showMessage ( "Tabs dialog weirdness prevails", 3000 );
+        return;
+    }
+}
+
+void MainWindow::OnClickedConnectionList()
+{
+    ConnectionListDialog connlistdialog;
+    switch ( connlistdialog.exec() )
+    {
+    case QDialog::Accepted:
+        ui->statusbar->showMessage ( "Connection list dialog accepted", 3000 );
+        return;
+    case QDialog::Rejected:
+        ui->statusbar->showMessage ( "Connection list dialog cancelled", 3000 );
+        return;
+    default:
+        ui->statusbar
+	   ->showMessage ( "Connection list dialog weirdness prevails", 3000 );
+        return;
+    }
+}
+
 
 void MainWindow::OnClickedLoginRegister()
 {
@@ -165,6 +219,15 @@ void MainWindow::OnClickedSetKeys()
 				  "Set keys: success",
 			    3000);
        ui->pushButtonConnect->setDisabled(false);
+       m_userdata = new UserData ( "", "", "", true );
+       if ( m_userdata->readFile ( "eggemesg.json" ))
+	  {
+	     debugprint ( "User data OK." );
+	  }
+       else
+	  {
+	     debugprint ( "User data not readable." );
+	  }
        m_statusbarlabel->setText ( "Crypto Ready" );
        break;
     case QDialog::Rejected: // failure 

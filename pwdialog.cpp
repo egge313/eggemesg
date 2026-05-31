@@ -44,7 +44,7 @@ void PwDialog::accept ()
                                           "Verification failure",
                                           "Illegal user name or password"
                                           );
-                     return;
+                     succeeded = false;
                   }
                else
                   {

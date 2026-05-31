@@ -30,6 +30,8 @@ class MainWindow : public QMainWindow
     EggeCrypt*      m_eggecrypt = nullptr;
     ConnectDialog*  m_connectdlg = nullptr;
     Contacts*       m_contacts = nullptr;
+    UserData*       m_userdata = nullptr;
+    // TabsDialog*     m_tabs = nullptr;
 
  public:
     explicit MainWindow ( QWidget* parent = 0 );
@@ -44,6 +46,8 @@ class MainWindow : public QMainWindow
     void OnClickedLogout();
     void OnShowMessage ( const QString & msg );
     void OnClickedSend();
+    void OnClickedTabs();
+    void OnClickedConnectionList();
 
  private:
     void setStyleSheet ( QString & sheetName );

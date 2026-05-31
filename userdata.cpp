@@ -14,96 +14,80 @@
 bool UserData::readFile ( const QString fileName )
 {
    // 2. Now read it back in
-    QJsonParseError parseError;
-    QJsonDocument doc2;
-    {
-        QFile fin("test.json");
-        fin.open(QIODevice::ReadOnly);
-        QByteArray ba2 = fin.readAll();
-        doc2 = QJsonDocument::fromJson(ba2, &parseError);
-        fin.close();
-    }
+   QJsonParseError parseError;
+   QJsonDocument doc2;
+   {
+      QFile fin ( fileName );
+      fin.open(QIODevice::ReadOnly);
+      QByteArray ba2 = fin.readAll();
+      doc2 = QJsonDocument::fromJson(ba2, &parseError);
+      fin.close();
+   }
 
-    if (parseError.error != QJsonParseError::NoError)
-    {
-        qWarning() << "Parse error at" << parseError.offset << ":" 
-		   << parseError.errorString();
-        return false;
-    }
-    else
-    {
-        qDebug() << "parsed JSON\n";
-        qDebug() << doc2.toJson(QJsonDocument::Indented);
-        //or QJsonDocument::Indented for a JsonFormat
-    }
+   if (parseError.error != QJsonParseError::NoError)
+      {
+	 qWarning() << "Parse error at" << parseError.offset << ":" 
+		    << parseError.errorString();
+	 return false;
+      }
+   else
+      {
+	 qDebug() << "parsed JSON\n";
+	 qDebug() << doc2.toJson(QJsonDocument::Indented);
+	 //or QJsonDocument::Indented for a JsonFormat
+      }
 
-    // Now extract the proper fields of UserData from the JSON.
-    QJsonObject rootObj = doc2.object();
-    if(rootObj. contains("UserName"))
-    {
-        QJsonObject subObj = rootObj.value("UserName").toObject();
-        qDebug() << subObj.value("UserName").toString();
-        m_user = subObj.value("Name").toString();
-    }
-    else
-    {
-        qDebug() << "UserData::readFile: missing UserName\n";
-        return false;
-    }
+   // Now extract the proper fields of UserData from the JSON.
+   QJsonObject rootObj = doc2.object();
+   if(rootObj. contains("UserName"))
+      {
+	 QJsonObject subObj = rootObj.value("UserName").toObject();
+	 qDebug() << subObj.value("UserName").toString();
+     m_user = subObj.value("UserName").toString();
+      }
+   else
+      {
+	 qDebug() << "UserData::readFile: missing UserName\n";
+	 return false;
+      }
 
-    if(rootObj.contains("Password"))
-    {
-        QJsonObject subObj = rootObj.value("Password").toObject();
-        qDebug() << subObj.value("Password").toString();
-        m_password = subObj.value("Password").toString();
-    }
-    else
-    {
-        qDebug() << "UserData::readFile: missing Password\n";
-        return false;
-    }
+   if(rootObj.contains("Password"))
+      {
+	 QJsonObject subObj = rootObj.value("Password").toObject();
+	 qDebug() << subObj.value("Password").toString();
+	 m_password = subObj.value("Password").toString();
+      }
+   else
+      {
+	 qDebug() << "UserData::readFile: missing Password\n";
+	 return false;
+      }
 
-    if(rootObj.contains("ScorchedEarthPassword"))
-    {
-        QJsonObject subObj = rootObj.value("ScorchedEarthPassword").toObject();
-        qDebug() << subObj.value("ScorchedEarthPassword").toString();
-        m_scorchedearthpassword = subObj.value("ScorchedEarthPassword").toString();
-    }
-    else
-    {
-        qDebug() << "UserData::readFile: missing ScorchedEarthPassword\n";
-        return false;
-    }
+   if(rootObj.contains("ScorchedEarthPassword"))
+      {
+	 QJsonObject subObj = rootObj.value("ScorchedEarthPassword").toObject();
+	 qDebug() << subObj.value("ScorchedEarthPassword").toString();
+	 m_scorchedearthpassword = subObj.value("ScorchedEarthPassword").toString();
+      }
+   else
+      {
+	 qDebug() << "UserData::readFile: missing ScorchedEarthPassword\n";
+	 return false;
+      }
 
-    if(rootObj.contains("KeyPair"))
-    {
-        QJsonObject subObj = rootObj.value("KeyPair").toObject();
-        qDebug() << subObj.value("KeyPair").toString();
-        // m_OwnKeyPair = subObj.value("KeyPair").toString(); /* egge: needing  a new constructor for EggeCrypt */
-    }
-    else
-    {
-        qDebug() << "UserData::readFile: missing KeyPair\n";
-        return false;
-    }
+   if(rootObj.contains("KeyPair"))
+      {
+	 QJsonObject subObj = rootObj.value("KeyPair").toObject();
+	 qDebug() << subObj.value("KeyPair").toString();
+	 // m_OwnKeyPair = subObj.value("KeyPair").toString(); /* egge: needing  a new constructor for EggeCrypt */
+      }
+   else
+      {
+	 qDebug() << "UserData::readFile: missing KeyPair\n";
+	 return false;
+      }
 
-    if(rootObj.contains("KnowPublicKeys"))
-    {
-        QJsonObject subObj = rootObj.value("KnowPublicKeys").toObject();
-        // qDebug() << subObj.value("KnowPublicKeys").toString();
-        QJsonArray knownArray = subObj.value("KnownPublicKeys").toArray();
-
-        for(const auto &value : knownArray )
-        {
-            // QJsonObject listElemObject = value.toObject();
-            // m_KnownPublicKeys.append ( value.toString() );
-        }
-    }
-    else
-    {
-        qDebug() << "UserData::readFile: missing KnowPublicKeys\n";
-        return false;
-    }
+   return true;
 }
 bool UserData::writeFile ( const QString fileName )
 {
@@ -112,7 +96,9 @@ bool UserData::writeFile ( const QString fileName )
   root["UserName"] = m_user;
   root["Password"] = m_password;
   root["ScorchedEarthPassword"] = m_scorchedearthpassword;
-  root["KeyPair"] = m_OwnKeyPair == nullptr ? QString ( "nullptr" ) : m_OwnKeyPair->getKeyPairAsString();
+  root["KeyPair"] = m_OwnKeyPair == nullptr
+     ? QString ( "nullptr" ) 
+     : m_OwnKeyPair->getKeyPairAsString();
 
   /*
   QJsonArray knownPublicKeys;
@@ -133,8 +119,9 @@ bool UserData::writeFile ( const QString fileName )
   qDebug() << ba;
   {
     QFile fout( fileName );
-    fout.open(QIODevice::WriteOnly);
-    fout.write(ba);
+    fout.open ( QIODevice::WriteOnly );
+    fout.write ( ba );
+    fout.close();
   }
   return true;
 }
@@ -177,4 +164,5 @@ EggeCrypt * UserData::getOwnKeyPair()
     return m_OwnKeyPair;
 }
 
+// --- end of userdata.cpp ---
 
