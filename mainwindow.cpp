@@ -10,6 +10,12 @@
 #include <QThread>
 #include "tabdialog.h"
 #include "connectionlistdialog.h"
+#include "version.h"
+#include "overlaytext.h"
+#include <QMovie>
+#include "displayablecontacts.h"
+#include <QMessageBox>
+#include "credits.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -40,12 +46,17 @@ MainWindow::MainWindow(QWidget *parent) :
             SLOT(OnClickedTabs()));
     connect(ui->pushButtonConnectionList, SIGNAL(clicked()), this,
             SLOT(OnClickedConnectionList()));
+    connect(ui->pushButtonInfo, SIGNAL(clicked()), this,
+            SLOT(OnClickedInfo()));
 
 
     ui->pushButtonConnect->setDisabled(true);
 
-    // This pushbutton is a placeholder
+    // This pushbutton is a placeholder.
     ui->pushButtonInvisible->hide();
+
+    // This pushbutton is for testing.
+    ui->pushButtonTabs->hide();
 
     // set style sheet
     QString coffee_stylesheet ("coffee");
@@ -54,6 +65,185 @@ MainWindow::MainWindow(QWidget *parent) :
     // set application icon
     QIcon windowicon(":/images/icon.png");
     setWindowIcon(windowicon);
+
+    // Set info button icon.
+    /* QIcon* infobuttonicon = new QIcon();
+    QPixmap pix (":/images/icons-info-40.png"
+    infobuttonicon->addPixmap ( QPixmap ( ));
+    ui->pushButtonInfo->setIcon ( *infobuttonicon );
+     */
+
+    /* QToolButton *b = new QToolButton(this);
+    QIcon *ico = new QIcon();
+    ico->addPixmap(QPixmap("on.jpg"),QIcon::Normal,QIcon::On);
+    ico->addPixmap(QPixmap("off.jpg"),QIcon::Normal,QIcon::Off);
+    b->setIcon(*ico);
+    b->setCheckable(true); */
+
+    // Contacts and their names.
+    m_displayablecontacts = new DisplayableContacts();
+    m_displayablecontacts->addContact ( ":/images/icons8-administrator-male-100.png", "Egge" );
+    m_displayablecontacts->addContact ( ":/images/icons8-avatar-100.png", "Mogge" );
+    m_displayablecontacts->addContact ( ":/images/icons8-businesswoman-100.png", "Imelda" );
+    m_displayablecontacts->addContact ( ":/images/icons8-long-brunette-hair-lady-100.png", "Irmeli" );
+    m_displayablecontacts->addContact ( ":/images/icons8-manager-100.png", "Tippe" );
+    m_displayablecontacts->addContact ( ":/images/icons8-user-female-100.png", "Justiina" );    
+
+    // Try and display a connection icon. Icon 1.
+    {
+        ui->labelIcon1->setAlignment( Qt::AlignCenter );
+        QPixmap pix;
+        DisplayableContacts::MyContact contact;
+
+        if ( !m_displayablecontacts->find ( "Egge", contact ))
+        {
+             ui->statusbar->showMessage( "Can't find contact", 3000);
+        }
+        else if( pix.load ( contact.fileName ))
+        {
+            // overlayTextOnBitmap ( pix, "Kalervo" );
+
+            // Scale pixmap to fit in label'size and keep ratio of pixmap.
+            pix = pix.scaled( ui->labelIcon1->size(), Qt::KeepAspectRatio );
+            ui->labelIcon1->setPixmap ( pix );
+            ui->labelIconTxt1->setText ( contact.name );
+        }
+        else
+        {
+           ui->statusbar->showMessage( "Can't load pixmap", 3000);
+        }
+    }
+
+    // Try and display a connection icon. Icon 2.
+    {
+        ui->labelIcon2->setAlignment( Qt::AlignCenter );
+        QPixmap pix;
+        DisplayableContacts::MyContact contact;
+
+        if ( !m_displayablecontacts->find ( "Mogge", contact ))
+        {
+            ui->statusbar->showMessage( "Can't find contact", 3000);
+        }
+        else if( pix.load ( contact.fileName ))
+        {
+            // overlayTextOnBitmap ( pix, "Kalervo" );
+
+            // Scale pixmap to fit in label'size and keep ratio of pixmap.
+            pix = pix.scaled( ui->labelIcon2->size(), Qt::KeepAspectRatio );
+            ui->labelIcon2->setPixmap ( pix );
+            ui->labelIconTxt2->setText ( contact.name );
+        }
+        else
+        {
+            ui->statusbar->showMessage( "Can't load pixmap", 3000);
+        }
+    }
+
+    // Try and display a connection icon. Icon 3.
+    {
+        ui->labelIcon3->setAlignment( Qt::AlignCenter );
+        QPixmap pix;
+        DisplayableContacts::MyContact contact;
+
+        if ( !m_displayablecontacts->find ( "Imelda", contact ))
+        {
+            ui->statusbar->showMessage( "Can't find contact", 3000);
+        }
+        else if( pix.load ( contact.fileName ))
+        {
+            // overlayTextOnBitmap ( pix, "Kalervo" );
+
+            // Scale pixmap to fit in label'size and keep ratio of pixmap.
+            pix = pix.scaled( ui->labelIcon3->size(), Qt::KeepAspectRatio );
+            ui->labelIcon3->setPixmap ( pix );
+            ui->labelIconTxt3->setText ( contact.name );
+        }
+        else
+        {
+            ui->statusbar->showMessage( "Can't load pixmap", 3000);
+        }
+    }
+
+    // Try and display a connection icon. Icon 4.
+    {
+        ui->labelIcon4->setAlignment( Qt::AlignCenter );
+        QPixmap pix;
+        DisplayableContacts::MyContact contact;
+
+        if ( !m_displayablecontacts->find ( "Irmeli", contact ))
+        {
+            ui->statusbar->showMessage( "Can't find contact", 3000);
+        }
+        else if( pix.load ( contact.fileName ))
+        {
+            // overlayTextOnBitmap ( pix, "Kalervo" );
+
+            // Scale pixmap to fit in label'size and keep ratio of pixmap.
+            pix = pix.scaled( ui->labelIcon4->size(), Qt::KeepAspectRatio );
+            ui->labelIcon4->setPixmap ( pix );
+            ui->labelIconTxt4->setText ( contact.name );
+        }
+        else
+        {
+            ui->statusbar->showMessage( "Can't load pixmap", 3000);
+        }
+    }
+
+    // Try and display a connection icon. Icon 5.
+    {
+        ui->labelIcon5->setAlignment( Qt::AlignCenter );
+        QPixmap pix;
+        DisplayableContacts::MyContact contact;
+
+        if ( !m_displayablecontacts->find ( "Tippe", contact ))
+        {
+            ui->statusbar->showMessage( "Can't find contact", 3000);
+        }
+        else if( pix.load ( contact.fileName ))
+        {
+            // overlayTextOnBitmap ( pix, "Kalervo" );
+
+            // Scale pixmap to fit in label'size and keep ratio of pixmap.
+            pix = pix.scaled( ui->labelIcon5->size(), Qt::KeepAspectRatio );
+            ui->labelIcon5->setPixmap ( pix );
+            ui->labelIconTxt5->setText ( contact.name );
+        }
+        else
+        {
+            ui->statusbar->showMessage( "Can't load pixmap", 3000);
+        }
+    }
+
+    // Try and display a connection icon. Icon 6.
+    {
+        ui->labelIcon6->setAlignment( Qt::AlignCenter );
+        QPixmap pix;
+        DisplayableContacts::MyContact contact;
+
+        if ( !m_displayablecontacts->find ( "Justiina", contact ))
+        {
+            ui->statusbar->showMessage( "Can't find contact", 3000);
+        }
+        else if( pix.load ( contact.fileName ))
+        {
+            // overlayTextOnBitmap ( pix, "Kalervo" );
+
+            // Scale pixmap to fit in label'size and keep ratio of pixmap.
+            pix = pix.scaled( ui->labelIcon6->size(), Qt::KeepAspectRatio );
+            ui->labelIcon6->setPixmap ( pix );
+            ui->labelIconTxt6->setText ( contact.name );
+        }
+        else
+        {
+            ui->statusbar->showMessage( "Can't load pixmap", 3000);
+        }
+    }
+
+
+    // For starters, show what we are running + version.
+    QString versionInfo = "Egge's Messenger (eggemesg) Version ";
+    versionInfo.append ( EGGEMESG_VERSION );
+    ui->labelInformation->setText ( versionInfo );
 }
 
 void MainWindow::OnClickedSend()
@@ -117,6 +307,18 @@ void MainWindow::OnClickedSend()
 
     QString user = m_pwdlg->getUserData()->getUser();
     ui->textEditMyMessages->append ( user + ": " + myMessage );
+}
+
+void MainWindow::OnClickedInfo()
+{
+    QMessageBox msgBox(this);
+    QString msg ( "You are running Egge's Messenger (eggemesg), version " );
+    msg.append( EGGEMESG_VERSION ).append( ".\n" );
+    msg.append( "Programmer: Esa Kettunen aka Egge\n" );
+    msg.append( "Source code: https://github.com/egge313/eggemesg\n" );
+    msg.append( "Credits: " ).append ( EGGEMESG_CREDITS1 );
+    msgBox.setText( msg );
+    msgBox.exec();
 }
 
 void MainWindow::OnClickedTabs()
@@ -299,6 +501,30 @@ void MainWindow::OnClickedConnect()
     }
 }
 
+#if 0
+void MainWindow::showContactIcon()
+{
+    // Try and display a connection icon. Icon 1.
+    {
+        ui->labelIcon1->setAlignment( Qt::AlignCenter );
+        QPixmap pix;
+
+        if( pix.load ( ":/images/man2.png" ))
+        {
+            overlayTextOnBitmap ( pix, "Kalervo" );
+
+            // Scale pixmap to fit in label'size and keep ratio of pixmap.
+            pix = pix.scaled( ui->labelIcon1->size(), Qt::KeepAspectRatio );
+            ui->labelIcon1->setPixmap(pix);
+        }
+        else
+        {
+            ui->statusbar->showMessage( "Icon not loaded", 3000);
+        }
+    }
+
+}
+#endif
 void MainWindow::showInfo ( QString infoMessage )
 {
     ui->textEditMyMessages->append ( infoMessage );

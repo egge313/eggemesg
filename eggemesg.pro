@@ -26,7 +26,9 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
     connectionlistdialog.cpp \
     contacts.cpp \
+    displayablecontacts.cpp \
     main.cpp \
+    overlaytext.cpp \
     pwdialog.cpp \
     eggecrypt.cpp \
     connectdialog.cpp \
@@ -44,6 +46,9 @@ SOURCES += \
 HEADERS += \
     connectionlistdialog.h \
     contacts.h \
+    credits.h \
+    displayablecontacts.h \
+    overlaytext.h \
     pwdialog.h \
     eggecrypt.h \
     connectdialog.h \
