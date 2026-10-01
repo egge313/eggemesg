@@ -55,7 +55,10 @@ bool UserData::readFile ( const QString fileName )
       {
 	 QJsonObject subObj = rootObj.value("Password").toObject();
 	 qDebug() << subObj.value("Password").toString();
-	 m_password = subObj.value("Password").toString();
+	 QString pwstr = subObj.value("Password").toString();
+	 QByteArray ba = pwstr.toLocal8Bit();
+	 const char * pw = ba.data();
+	 m_password.dowrite ( pw, strlen(pw) );
       }
    else
       {
@@ -89,12 +92,26 @@ bool UserData::readFile ( const QString fileName )
 
    return true;
 }
+
+
 bool UserData::writeFile ( const QString fileName )
 {
   QJsonObject root;
 
   root["UserName"] = m_user;
-  root["Password"] = m_password;
+  {
+      try
+	  {
+	      char table[1024];
+	      m_password.doread ( (char *)table, 1024 );
+	      root["Password"] = table;
+	  }
+      catch ( std::exception & e )
+	{
+	    std::cerr << "Error: " << e.what() << '\n';
+	    return false;
+	}
+  }
   root["ScorchedEarthPassword"] = m_scorchedearthpassword;
   root["KeyPair"] = m_OwnKeyPair == nullptr
      ? QString ( "nullptr" ) 
@@ -152,6 +169,22 @@ bool UserData::writeOwnPubKey ( const QString fileName )
         fout.close();
     }
     return true;
+}
+
+QString UserData::getPassword()
+{
+    try
+	{
+	    char table[1024];
+
+	    m_password.doread ( (char *)table, 1024 );
+	    return table;
+	}
+    catch ( std::exception & e )
+	{
+	    std::cerr << "Error: " << e.what() << '\n';
+	    return "";
+	}
 }
 
 void UserData::setOwnKeyPair ( EggeCrypt * ownKeyPair )

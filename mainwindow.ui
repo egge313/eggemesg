@@ -457,7 +457,7 @@
        <x>10</x>
        <y>10</y>
        <width>104</width>
-       <height>31</height>
+       <height>41</height>
       </rect>
      </property>
      <property name="minimumSize">
@@ -506,7 +506,7 @@
        <x>120</x>
        <y>10</y>
        <width>80</width>
-       <height>31</height>
+       <height>41</height>
       </rect>
      </property>
      <property name="minimumSize">
@@ -550,7 +550,7 @@
        <x>210</x>
        <y>10</y>
        <width>80</width>
-       <height>31</height>
+       <height>41</height>
       </rect>
      </property>
      <property name="minimumSize">
@@ -588,38 +588,13 @@
       <bool>false</bool>
      </property>
     </widget>
-    <widget class="QPushButton" name="pushButtonInvisible">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-     <property name="geometry">
-      <rect>
-       <x>300</x>
-       <y>10</y>
-       <width>101</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>101</width>
-       <height>28</height>
-      </size>
-     </property>
-     <property name="focusPolicy">
-      <enum>Qt::FocusPolicy::NoFocus</enum>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
     <widget class="QPushButton" name="pushButtonLogout">
      <property name="geometry">
       <rect>
        <x>700</x>
        <y>10</y>
        <width>80</width>
-       <height>31</height>
+       <height>41</height>
       </rect>
      </property>
      <property name="minimumSize">
@@ -647,10 +622,10 @@
     <widget class="QPushButton" name="pushButtonTabs">
      <property name="geometry">
       <rect>
-       <x>540</x>
+       <x>430</x>
        <y>10</y>
        <width>84</width>
-       <height>31</height>
+       <height>41</height>
       </rect>
      </property>
      <property name="text">
@@ -660,10 +635,10 @@
     <widget class="QPushButton" name="pushButtonConnectionList">
      <property name="geometry">
       <rect>
-       <x>410</x>
+       <x>300</x>
        <y>10</y>
        <width>121</width>
-       <height>31</height>
+       <height>41</height>
       </rect>
      </property>
      <property name="font">
@@ -679,10 +654,10 @@
     <widget class="QPushButton" name="pushButtonInfo">
      <property name="geometry">
       <rect>
-       <x>630</x>
+       <x>520</x>
        <y>10</y>
        <width>31</width>
-       <height>31</height>
+       <height>41</height>
       </rect>
      </property>
      <property name="text">

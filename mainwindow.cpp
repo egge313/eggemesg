@@ -53,7 +53,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->pushButtonConnect->setDisabled(true);
 
     // This pushbutton is a placeholder.
-    ui->pushButtonInvisible->hide();
+    // ui->pushButtonInvisible->hide();
 
     // This pushbutton is for testing.
     ui->pushButtonTabs->hide();
@@ -241,7 +241,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 
     // For starters, show what we are running + version.
-    QString versionInfo = "Egge's Messenger (eggemesg) Version ";
+    QString versionInfo = "Egge's Messenger (eggemesg), version ";
     versionInfo.append ( EGGEMESG_VERSION );
     ui->labelInformation->setText ( versionInfo );
 }
@@ -268,7 +268,6 @@ void MainWindow::OnClickedSend()
         ui->statusbar->showMessage ( "No known contacts", 3000 );
         return;
     }
-
 
     egge::client::WebSocketClient * wsClient = m_connectdlg->getClient();
     if ( nullptr == wsClient )
@@ -311,14 +310,21 @@ void MainWindow::OnClickedSend()
 
 void MainWindow::OnClickedInfo()
 {
-    QMessageBox msgBox(this);
-    QString msg ( "You are running Egge's Messenger (eggemesg), version " );
-    msg.append( EGGEMESG_VERSION ).append( ".\n" );
-    msg.append( "Programmer: Esa Kettunen aka Egge\n" );
-    msg.append( "Source code: https://github.com/egge313/eggemesg\n" );
-    msg.append( "Credits: " ).append ( EGGEMESG_CREDITS1 );
-    msgBox.setText( msg );
-    msgBox.exec();
+   QMessageBox msgBox(this);
+   QString msg ( "You are running Egge's Messenger (eggemesg), version " );
+   msg.append( EGGEMESG_VERSION ).append( "\n" );
+   msg.append( "Programmer: Esa Kettunen aka Egge\n" );
+   msg.append( "Email: esa.kettunen@gmx.com\n" );
+   msg.append( "Copyright © 2018-2026 Esa Kettunen\n" );
+   msg.append( "License: GNU LESSER GENERAL PUBLIC LICENSE, Version 3\n" );
+   msg.append( "Source code: https://github.com/egge313/eggemesg\n" );
+   msg.append( "Credits: " ).append ( EGGEMESG_CREDITS1 ).append ( "\n" );
+   msg.append( "Credits: " ).append ( "GNU Privacy Guard library\n" );
+   msg.append( "Credits: " ).append ( "Curl library\n" );
+   msg.append( "Credits: " ).append ( "Sodium library\n" );
+   msg.append( "Credits: " ).append ( "Qt development environment\n" );
+   msgBox.setText( msg );
+   msgBox.exec();
 }
 
 void MainWindow::OnClickedTabs()

@@ -49,6 +49,7 @@ HEADERS += \
     credits.h \
     displayablecontacts.h \
     overlaytext.h \
+    protectedpage.h \
     pwdialog.h \
     eggecrypt.h \
     connectdialog.h \

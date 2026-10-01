@@ -1,6 +1,6 @@
 // Egge's Messenger: Basic cryptography
 //
-// Copyright (C) 2018 Esa Kettunen
+// Copyright (c) 2018-2026 Esa Kettunen
 //
 // RSA based public key encryption.
 //

@@ -1,4 +1,4 @@
-// EggeCrypt -- An RSA interface.
+// EggeCrypt -- An RSA interface employing libgrypt.
 
 #pragma once
 

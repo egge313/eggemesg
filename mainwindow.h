@@ -54,7 +54,7 @@ public:
     void OnClickedInfo();
 
  private:
-   unsigned m_ContactFileSize = 7;
+   // unsigned m_ContactFileSize = 7;
    // QString m_ContactFile[
     void setStyleSheet ( QString & sheetName );
     Ui::MainWindow* ui;

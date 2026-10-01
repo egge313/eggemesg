@@ -22,8 +22,8 @@ CryptoDialog::CryptoDialog(QWidget * parent, UserData * userdata) :
   ui->generatePushButton->setDisabled(true);
 
   // Initialise own keys.
-  EggeCrypt * ecrypt = new EggeCrypt(m_userdata->getUser(),
-                                    m_userdata->getPassword());
+  EggeCrypt * ecrypt = new EggeCrypt ( m_userdata->getUser(),
+                                       m_userdata->getPassword() );
 
   ui->generateLabel->setText(tr("Loading own keypair."));
   ecrypt->initialize();

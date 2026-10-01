@@ -9,8 +9,11 @@ PwDialog::PwDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::PwDialog)
 {
-    ui->setupUi(this);
+    ui->setupUi ( this );
     ui->tabScorchedEarth->setEnabled ( false );
+    ui->tabScorchedEarth->setHidden ( true);
+    ui->tabScorchedEarth->setVisible ( false );
+    ui->tabLogin->setEnabled ( true );
 }
 
 void PwDialog::accept ()
@@ -37,7 +40,8 @@ void PwDialog::accept ()
 
                PwHash pwhash;
                pwhash.readFile();
-               if ( !pwhash.verify ( ui->lineEditPw1->text(),
+	       QString pw = ui->lineEditPw1->text();
+               if ( !pwhash.verify ( pw,
                                      ui->lineEditUser1->text() ))
                   {
                      QMessageBox::warning(this,
@@ -57,11 +61,11 @@ void PwDialog::accept ()
 
                if ( succeeded )
                   {
-                     m_userdata = new UserData ( ui->lineEditUser1->text(),
-                                                 ui->lineEditPw1->text(),
-                                                 "",
-                                                 false );
-                     QDialog::accept();
+		      m_userdata = new UserData ( pw,
+						  ui->lineEditPw1->text(),
+						  "",
+						  false );
+		      QDialog::accept();
                   }
                else
                   {

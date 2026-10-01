@@ -51,17 +51,17 @@ ConnectDialog::ConnectDialog(QWidget *parent,
 
 void ConnectDialog::showhostname()
 {
-  QString name = QHostInfo::localHostName();
-  if (!name.isEmpty())
-    {
-      QString domain = QHostInfo::localDomainName();
-      if (!domain.isEmpty())
-        {
-            name = name + QChar('.') + domain;
-        }
-    }
-  QString hostinfo = QString("Host name: ") + name;
-  // ui->listWidgetHostInfo->addItem(hostinfo);
+   QString name = QHostInfo::localHostName();
+   if (!name.isEmpty())
+      {
+	 QString domain = QHostInfo::localDomainName();
+	 if (!domain.isEmpty())
+	    {
+	       name = name + QChar('.') + domain;
+	    }
+      }
+   QString hostinfo = QString("Host name: ") + name;
+   // ui->listWidgetHostInfo->addItem(hostinfo);
 }
 
 void ConnectDialog::tabTorControlUpdate()
@@ -140,7 +140,8 @@ void ConnectDialog::onPushButtonLaunchService ()
     m_EggemesgServer = new egge::server::WebSocketServer ( portnumber.toInt(), this );
     if ( m_EggemesgServer->isListening() )
     {
-        ui->listWidgetTorControlHistory->addItem ( "Eggemesg service listening to port " + portnumber + ".");
+        ui->listWidgetTorControlHistory->addItem ( "Eggemesg service listening to port "
+						   + portnumber + ".");
         // egge: does not work: m_mainwindow->showInfo ( "Eggemesg listening port " + portnumber + ".");
     }
     else
