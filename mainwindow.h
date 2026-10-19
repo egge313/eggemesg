@@ -39,6 +39,9 @@ public:
     explicit MainWindow ( QWidget* parent = 0 );
     void showInfo ( QString infoMessage );
     void showMessage ( QString message );
+    void addContact ( const QString name,
+		      const QString pubkey,
+		      const QString address );
     // void showContactIcon()
     ~MainWindow();
 
@@ -53,14 +56,16 @@ public:
     void OnClickedConnectionList();
     void OnClickedInfo();
 
- private:
+private:
    // unsigned m_ContactFileSize = 7;
    // QString m_ContactFile[
     void setStyleSheet ( QString & sheetName );
-    Ui::MainWindow* ui;
+
+private:
+    Ui::MainWindow * ui;
     QString eggemesg_version = EGGEMESG_VERSION;
     QLabel* m_statusbarlabel = nullptr;
-    egge::server::WebSocketServer * m_websocketserver = nullptr;
+    WebSocketServer * m_websocketserver = nullptr;
 
 };
 

@@ -24,8 +24,8 @@ class ConnectDialog : public QDialog
     explicit ConnectDialog( QWidget    * parent = 0,
                             QMainWindow * mainwindow = nullptr );
     ~ConnectDialog();
-    egge::server::WebSocketServer * getServer ();
-    egge::client::WebSocketClient * getClient ();
+    WebSocketServer * getServer ();
+    WebSocketClient * getClient ();
 
  public slots:
    void accept ();
@@ -46,7 +46,8 @@ class ConnectDialog : public QDialog
 
  private:
      Ui::ConnectDialog * ui;
-     egge::server::WebSocketServer * m_EggemesgServer = nullptr;
-     egge::client::WebSocketClient * m_EggemesgClient = nullptr;
-
+     WebSocketServer * m_EggemesgServer = nullptr;
+     WebSocketClient * m_EggemesgClient = nullptr;
 };
+
+// ----------------- end of connectdialg.h ------------------------

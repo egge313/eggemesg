@@ -16,6 +16,7 @@
 #include "displayablecontacts.h"
 #include <QMessageBox>
 #include "credits.h"
+#include <QTime>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -269,7 +270,7 @@ void MainWindow::OnClickedSend()
         return;
     }
 
-    egge::client::WebSocketClient * wsClient = m_connectdlg->getClient();
+    WebSocketClient * wsClient = m_connectdlg->getClient();
     if ( nullptr == wsClient )
     {
         ui->statusbar->showMessage ( "No active connection", 3000 );
@@ -305,8 +306,24 @@ void MainWindow::OnClickedSend()
 
 
     QString user = m_pwdlg->getUserData()->getUser();
-    ui->textEditMyMessages->append ( user + ": " + myMessage );
+    showInfo ( user + ": " + myMessage );
 }
+
+// Add a new contact to the list of known contacts
+//
+void MainWindow::addContact ( const QString name,
+			      const QString pubkey,
+			      const QString address )
+{
+    if ( nullptr == m_contacts )
+	{
+	    m_contacts = new Contacts ();
+	}
+    m_contacts->insert ( name, pubkey, address );
+    ui->statusbar->showMessage ( "New contact " + name + " " + address, 3000 );
+}
+
+
 
 void MainWindow::OnClickedInfo()
 {
@@ -463,7 +480,7 @@ void MainWindow::OnClickedLogout()
 
 void MainWindow::OnShowMessage(const QString & msg)
 {
-  ui->textEditMyMessages->append(msg);
+    showInfo ( msg );
 }
 
 void MainWindow::OnClickedConnect()
@@ -477,23 +494,47 @@ void MainWindow::OnClickedConnect()
     {
     case QDialog::Accepted:
         {
-            m_statusbarlabel->setText ( "Connected" );
-            egge::server::WebSocketServer * wss = m_connectdlg->getServer();
+            WebSocketServer * wss = m_connectdlg->getServer();
 
             if ( nullptr != wss )
             {
                 QString mymessage("");
                 if ( wss->getMessage ( mymessage, true ))
-                     ui->textEditMyMessages->append ( mymessage );
-                connect ( wss, &egge::server::WebSocketServer::signalTextMessage, this, &MainWindow::OnShowMessage );
+		    {
+			showInfo ( mymessage );
+		    }
+                connect ( wss, &WebSocketServer::signalTextMessage, this,
+			  &MainWindow::OnShowMessage );
             }
 
-            egge::client::WebSocketClient * wsClient = m_connectdlg->getClient();
+            WebSocketClient * wsClient = m_connectdlg->getClient();
 
             if ( nullptr != wsClient )
             {
-
+		if ( ! wsClient->send_text_message ( "Hello!" ) )
+		    {
+		    }
             }
+
+	    if ( nullptr != wss && nullptr != wsClient )
+		{
+		    m_statusbarlabel->setText ( "Connected" );
+		    showInfo ( "Acting as server and client." );
+		}
+	    else if ( nullptr != wss )
+		{
+		    m_statusbarlabel->setText ( "Server" );
+		    showInfo ( "Acting as server." ); 
+		}
+	    else if ( nullptr != wsClient )
+		{
+		    m_statusbarlabel->setText ( "Client" );
+		    showInfo ( "Acting as client." ); 
+		}
+	    else
+		{
+		    m_statusbarlabel->setText ( "Local" );
+		}
 
             break;
         }
@@ -533,7 +574,10 @@ void MainWindow::showContactIcon()
 #endif
 void MainWindow::showInfo ( QString infoMessage )
 {
-    ui->textEditMyMessages->append ( infoMessage );
+    QTime time = QTime::currentTime();
+    QString msg = time.toString ( Qt::TextDate );
+    msg = msg + " " + infoMessage;
+    ui->textEditMyMessages->append ( msg );
 }
 
 

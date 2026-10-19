@@ -102,13 +102,13 @@ void ConnectDialog::showhostip()
     }
 }
 
-egge::server::WebSocketServer * ConnectDialog::getServer()
+WebSocketServer * ConnectDialog::getServer()
 {
     return m_EggemesgServer;
 }
 
 
-egge::client::WebSocketClient * ConnectDialog::getClient()
+WebSocketClient * ConnectDialog::getClient()
 {
     return m_EggemesgClient;
 }
@@ -129,24 +129,31 @@ void ConnectDialog::onPushButtonLaunchService ()
 
     // Check if we are online in the first place.
     if ( isonline() )
-        ui->listWidgetTorControlHistory->addItem ( "Connected to the Internet." );
+        ui->listWidgetTorControlHistory
+	    ->addItem ( "Connected to the Internet." );
     else
     {
-        ui->listWidgetTorControlHistory->addItem ( "Not connected to the Internet." );
+        ui->listWidgetTorControlHistory
+	    ->addItem ( "Not connected to the Internet." );
         return;
     }
 
     // Launch an eggemesg onion (Tor) service.
-    m_EggemesgServer = new egge::server::WebSocketServer ( portnumber.toInt(), this );
+    m_EggemesgServer = new WebSocketServer ( portnumber.toInt(),
+					     this );
     if ( m_EggemesgServer->isListening() )
     {
-        ui->listWidgetTorControlHistory->addItem ( "Eggemesg service listening to port "
-						   + portnumber + ".");
+        ui->listWidgetTorControlHistory
+	    ->addItem ( "Eggemesg service listening to port "
+			+ portnumber + ".");
         // egge: does not work: m_mainwindow->showInfo ( "Eggemesg listening port " + portnumber + ".");
+	((MainWindow*)m_mainwindow)->showInfo ( "Eggemesg listening port "
+					       + portnumber + ".");
     }
     else
     {
-        ui->listWidgetTorControlHistory->addItem ( "Eggemesg service started, not yet listening." );
+        ui->listWidgetTorControlHistory
+	    ->addItem ( "Eggemesg service started, not yet listening." );
     }
 }
 
@@ -178,9 +185,17 @@ void ConnectDialog::onPushButtonTorClientConnect()
 
     // Try to open an eggemesg onion (Tor) service.
     // QString msg = "Initial connection attempt.";
-    m_EggemesgClient = new egge::client::WebSocketClient (QUrl("ws://g6katdgrmawavzqzrhgf5ysct6y6l5424zy27b3ncjqehdz664jop4yd.onion:8888"));
+    m_EggemesgClient = new WebSocketClient (
+					    QUrl(
+  "ws://g6katdgrmawavzqzrhgf5ysct6y6l5424zy27b3ncjqehdz664jop4yd.onion:8888")
+					    );
 
-    ui->listWidgetTorControlHistory->addItem ( "Eggemesg attempting connection to  " + portnumber + ".");
+    ui->listWidgetTorControlHistory
+	->addItem (
+		   "Eggemesg attempting connection to  "
+		   + portnumber + ".");
+    ((MainWindow*)m_mainwindow)->addContact ( "**anonymous**", "",
+  "ws://g6katdgrmawavzqzrhgf5ysct6y6l5424zy27b3ncjqehdz664jop4yd.onion:8888" );
 
 }
 
@@ -199,7 +214,8 @@ bool ConnectDialog::isonline ()
       {
 	 QNetworkInformation* net_info = QNetworkInformation::instance();
 	 if ( nullptr != net_info ) {
-	    if(net_info->reachability() == QNetworkInformation::Reachability::Online) {
+	    if ( net_info->reachability() ==
+	         QNetworkInformation::Reachability::Online) {
 	       return true;
 	    }
 	    else {

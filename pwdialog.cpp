@@ -14,6 +14,9 @@ PwDialog::PwDialog(QWidget *parent) :
     ui->tabScorchedEarth->setHidden ( true);
     ui->tabScorchedEarth->setVisible ( false );
     ui->tabLogin->setEnabled ( true );
+
+    // 
+    ui->tabWidget->setCurrentIndex ( 0 );
 }
 
 void PwDialog::accept ()

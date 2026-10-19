@@ -1,0 +1,15 @@
+How to use UNIX sockets to provide a Tor service:
+
+https://github.com/copilot/share/08554182-0960-8044-b911-a40a20524819
+
+C++ smart pointers:
+
+https://github.com/copilot/share/025d5010-0960-8440-9843-240300920849
+
+Clickable icons with popup menus:
+
+https://github.com/copilot/share/8a540310-0940-8864-b002-a643201a2848
+
+Comparison of different appraoches to public key encryption:
+
+https://gpgfrontend.bktus.com/extra/algorithms-comparison/

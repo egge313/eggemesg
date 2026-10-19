@@ -21,7 +21,7 @@
 
 #include "eggecrypt.h"
 #include <QByteArray>
-
+#include "debugprint.h"
  
 #define my_isascii(c) (!((c) & 0x80))
 #define digitp(p)   (*(p) >= '0' && *(p) <= '9')
@@ -187,6 +187,8 @@ bool EggeCrypt::readfile ()
     
     QByteArray qba = m_password.toUtf8();
     char * pw = qba.data();
+    debugprint ( "EggeCrypt::readfile password: " );
+    debugprint ( pw );
     if ( nullptr == m_aes_hd_ptr )
         m_aes_hd_ptr = new gcry_cipher_hd_t;
     get_aes_ctx( m_aes_hd_ptr, pw);
@@ -539,7 +541,9 @@ int EggeCrypt::generatekeys()
     gcry_cipher_hd_t aes_hd;
     QByteArray qba = m_password.toUtf8();
     char * pw = qba.data();
-
+    debugprint ( "EggeCrypt::generatekeys password: " );
+    debugprint ( pw );
+    
     get_aes_ctx(&aes_hd, pw);
 
     /* Encrypt the RSA key pair. */
@@ -548,19 +552,22 @@ int EggeCrypt::generatekeys()
     if (!rsa_buf) {
         xerr("malloc: could not allocate rsa buffer");
     }
-    gcry_sexp_sprint ( *m_rsa_keypair_ptr, GCRYSEXP_FMT_ADVANCED, rsa_buf, rsa_len);
+    gcry_sexp_sprint ( *m_rsa_keypair_ptr, GCRYSEXP_FMT_ADVANCED,
+		       rsa_buf, rsa_len);
 
     err = gcry_cipher_encrypt(aes_hd, (unsigned char*) rsa_buf, 
                               rsa_len, NULL, 0);
-    if (err) {
-        xerr("gcrypt: could not encrypt with AES");
-    }
+    if (err)
+	{
+	    xerr("gcrypt: could not encrypt with AES");
+	}
 
     /* Write the encrypted key pair to disk. */
-    if (fwrite(rsa_buf, rsa_len, 1, lockf) != 1) {
-        perror("fwrite");
-        xerr("fwrite() failed");
-    }
+    if (fwrite(rsa_buf, rsa_len, 1, lockf) != 1)
+	{
+	    perror("fwrite");
+	    xerr("fwrite() failed");
+	}
 
     /* Release contexts. */
     // gcry_sexp_release(rsa_keypair);
